@@ -58,49 +58,58 @@ if (!existsSync(pluginJsonPath)) {
   }
 }
 
-// 2. Check skill directory and SKILL.md
+// 2. Check all skill directories and SKILL.md files
 console.log("\n2. Skill files");
-const skillDir = join(ROOT, "skills", "ecommerce-multilingual-copy");
-if (!existsSync(skillDir)) {
-  fail("skills/ecommerce-multilingual-copy/ directory not found");
-} else {
-  pass("skills/ecommerce-multilingual-copy/ directory exists");
+const pluginSkills = existsSync(pluginJsonPath)
+  ? (await Bun.file(pluginJsonPath).json()).skills as string[]
+  : ["ecommerce-multilingual-copy"];
 
-  const skillMdPath = join(skillDir, "SKILL.md");
-  if (!existsSync(skillMdPath)) {
-    fail("SKILL.md not found");
+for (const skillName of pluginSkills) {
+  const sDir = join(ROOT, "skills", skillName);
+  if (!existsSync(sDir)) {
+    fail(`skills/${skillName}/ directory not found`);
+    continue;
+  }
+  pass(`skills/${skillName}/ directory exists`);
+
+  const sMdPath = join(sDir, "SKILL.md");
+  if (!existsSync(sMdPath)) {
+    fail(`skills/${skillName}/SKILL.md not found`);
+    continue;
+  }
+
+  const content = await Bun.file(sMdPath).text();
+
+  // Check frontmatter
+  const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+  if (!fmMatch) {
+    fail(`skills/${skillName}/SKILL.md: no valid frontmatter found`);
   } else {
-    const content = await Bun.file(skillMdPath).text();
+    const fm = fmMatch[1];
+    if (!fm.includes("name:")) fail(`skills/${skillName}/SKILL.md: frontmatter missing 'name'`);
+    else pass(`skills/${skillName}/SKILL.md: frontmatter has 'name'`);
 
-    // Check frontmatter
-    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!fmMatch) {
-      fail("SKILL.md: no valid frontmatter found");
+    if (!fm.includes("description:")) fail(`skills/${skillName}/SKILL.md: frontmatter missing 'description'`);
+    else pass(`skills/${skillName}/SKILL.md: frontmatter has 'description'`);
+
+    if (!fm.includes("argument-hint:")) warn(`skills/${skillName}/SKILL.md: frontmatter missing 'argument-hint'`);
+    else pass(`skills/${skillName}/SKILL.md: frontmatter has 'argument-hint'`);
+  }
+
+  // Check reference links (only for skills that have them)
+  const linkPattern = /\[.*?\]\((references\/[^)]+)\)/g;
+  let match;
+  while ((match = linkPattern.exec(content)) !== null) {
+    const refPath = join(sDir, match[1]);
+    if (!existsSync(refPath)) {
+      fail(`skills/${skillName}/SKILL.md references ${match[1]} but file not found`);
     } else {
-      const fm = fmMatch[1];
-      if (!fm.includes("name:")) fail("SKILL.md: frontmatter missing 'name'");
-      else pass("SKILL.md: frontmatter has 'name'");
-
-      if (!fm.includes("description:")) fail("SKILL.md: frontmatter missing 'description'");
-      else pass("SKILL.md: frontmatter has 'description'");
-
-      if (!fm.includes("argument-hint:")) warn("SKILL.md: frontmatter missing 'argument-hint'");
-      else pass("SKILL.md: frontmatter has 'argument-hint'");
-    }
-
-    // Check reference links
-    const linkPattern = /\[.*?\]\((references\/[^)]+)\)/g;
-    let match;
-    while ((match = linkPattern.exec(content)) !== null) {
-      const refPath = join(skillDir, match[1]);
-      if (!existsSync(refPath)) {
-        fail(`SKILL.md references ${match[1]} but file not found`);
-      } else {
-        pass(`Reference link resolves: ${match[1]}`);
-      }
+      pass(`Reference link resolves: ${match[1]}`);
     }
   }
 }
+
+const skillDir = join(ROOT, "skills", "ecommerce-multilingual-copy");
 
 // 3. Check reference files
 console.log("\n3. Reference files");

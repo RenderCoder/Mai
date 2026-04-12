@@ -33,12 +33,14 @@ bun run dev  # 或：claude --plugin-dir .
 
 ### 1. 创建产品知识库
 
-复制 `docs/examples/_TEMPLATE.md` 模板，填写你的产品信息：
+使用内置模板生成器：
 
 ```bash
-cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md
-# 编辑文件，填写产品规格、卖点、SEO 关键词等
+/ecommerce-multilingual-copy:new-product WT801 ~/my-products/
+# 在 ~/my-products/ 创建 WT801.md，所有板块已预设好，直接填写即可
 ```
+
+或手动复制模板：`cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md`
 
 ### 2. 运行技能
 
@@ -58,7 +60,7 @@ cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md
 
 ### 3. 获取结果
 
-技能��出 Markdown 表格，可直接粘贴到 Excel、Google Sheets 或 Figma。使用 `--requirement` 或 `--product` 参数时，结果会自动保存：
+技能输出 Markdown 表格，可直接粘贴到 Excel、Google Sheets 或 Figma。使用 `--requirement` 或 `--product` 参数时，结果会自动保存：
 
 ```
 ~/tasks/image-brief_result_20260412.md
@@ -84,6 +86,33 @@ cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md
 | `a-plus` | 横幅+4 个特性模块 | 完整 4 步 |
 | `tagline` | 1-2 行创意文案 | 简化 |
 | `image-copy` | 主标题+副标题+标签配文 | 完整 4 步 |
+
+## 辅助工具技能
+
+### 创建产品知识库
+
+```bash
+/ecommerce-multilingual-copy:new-product <产品名> [目标目录]
+
+# 示例
+/ecommerce-multilingual-copy:new-product WT801 ~/my-products/
+/ecommerce-multilingual-copy:new-product WBG-B32
+```
+
+生成产品知识库模板文件，包含所有必填板块（规格、卖点、SEO 关键词、合规规则等），直接填写即可使用。
+
+### 创建需求文件
+
+```bash
+/ecommerce-multilingual-copy:new-requirement <名称> [目标目录] [--type 文案类型]
+
+# 示例
+/ecommerce-multilingual-copy:new-requirement wt702-image3 ~/tasks/
+/ecommerce-multilingual-copy:new-requirement listing-v2 ~/tasks/ --type full-listing
+/ecommerce-multilingual-copy:new-requirement brand-tagline ~/tasks/ --type tagline
+```
+
+根据指定的文案类型生成对应的需求模板（默认 `image-copy`），每种类型有专属模板结构。
 
 ## 管线工作原理
 

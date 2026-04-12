@@ -41,7 +41,7 @@
 | never breaks | durable construction / built to last |
 | unlimited | long-lasting / extended |
 
-**核心原则**：使用 "designed to", "helps", "engineered for", "up to" 替代绝对表述。数字声明须注明测试条���（例："up to 6 months battery life under normal use conditions"）。
+**核心原则**：使用 "designed to", "helps", "engineered for", "up to" 替代绝对表述。数字声明须注明测试条件（例："up to 6 months battery life under normal use conditions"）。
 
 ## 三、平台特定规则
 

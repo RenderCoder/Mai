@@ -124,7 +124,7 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 3. 若同名结果文件已存在，追加时间后缀：`_result_<YYYYMMDD>_<HHmm>.md`
 
 **情况 2：仅提供了 `--product` 参数（无 `--requirement`）**
-1. 从产品文件路径���取目录和文件名
+1. 从产品文件路径提取目录和文件名
 2. 生成结果文件路径：`<产品文件所在目录>/<产品文件名>_<copy-type>_result_<YYYYMMDD>.md`
    - 例：产品文件为 `~/products/WT702.md`，文案类型为 `title` → 结果保存为 `~/products/WT702_title_result_20260412.md`
 
@@ -142,7 +142,7 @@ platform: [平台]
 generated: [YYYY-MM-DD HH:mm]
 ---
 
-# [产品名] - [���案类型] 多语言文案
+# [产品名] - [文案类型] 多语言文案
 
 ## 最终文案表
 [Step 4.1 的完整表格]
@@ -334,7 +334,7 @@ generated: [YYYY-MM-DD HH:mm]
 
 逐一处理 Step 2 中的每个 `[BLOCKER]` 和 `[WARNING]`。对于 `[SUGGESTION]`，择优采纳。
 
-#### 3.2 产出最终定稿���
+#### 3.2 产出最终定稿表
 
 按照 [output-format.md](references/output-format.md) 格式，输出最终 5 列 Markdown 表格。
 

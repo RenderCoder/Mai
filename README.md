@@ -35,12 +35,15 @@ bun run dev  # or: claude --plugin-dir .
 
 ### 1. Create a Product Knowledge Base
 
-Copy the template from `docs/examples/_TEMPLATE.md` and fill in your product details:
+Use the built-in template generator:
 
 ```bash
-cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md
+/ecommerce-multilingual-copy:new-product WT801 ~/my-products/
+# Creates ~/my-products/WT801.md with all sections pre-filled
 # Edit the file with your product specs, selling points, SEO keywords, etc.
 ```
+
+Or copy the template manually: `cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md`
 
 ### 2. Run the Skill
 
@@ -98,6 +101,33 @@ See `docs/examples/_TEMPLATE.md` for the full template. Key sections:
 - **Compliance Overrides**: Product-specific allowed/forbidden claims
 - **Mandatory Terms**: Terms that must appear in all copy
 - **Unit Localization**: GAL for North America, L for Europe
+
+## Utility Skills
+
+### Create Product Knowledge Base
+
+```bash
+/ecommerce-multilingual-copy:new-product <product-name> [target-directory]
+
+# Examples
+/ecommerce-multilingual-copy:new-product WT801 ~/my-products/
+/ecommerce-multilingual-copy:new-product WBG-B32
+```
+
+Creates a product knowledge base template with all required sections (specs, selling points, SEO keywords, compliance rules, etc.) pre-structured and ready to fill in.
+
+### Create Requirement File
+
+```bash
+/ecommerce-multilingual-copy:new-requirement <name> [target-directory] [--type copy-type]
+
+# Examples
+/ecommerce-multilingual-copy:new-requirement wt702-image3 ~/tasks/
+/ecommerce-multilingual-copy:new-requirement listing-v2 ~/tasks/ --type full-listing
+/ecommerce-multilingual-copy:new-requirement brand-tagline ~/tasks/ --type tagline
+```
+
+Creates a requirement template tailored to the specified copy type (default: `image-copy`). Each type has its own template with relevant sections.
 
 ## How the Pipeline Works
 
