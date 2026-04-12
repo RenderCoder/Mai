@@ -1,0 +1,23 @@
+{
+  "name": "ecommerce-multilingual-copy",
+  "version": "1.0.0",
+  "description": "Generate multilingual e-commerce copy (CN/EN/DE/ES) using a 4-step reflective translation pipeline. Supports Amazon/AliExpress listings, image copy, A+ content, and taglines.",
+  "author": {
+    "name": "Bevis",
+    "url": "https://github.com/RenderCoder"
+  },
+  "repository": "https://github.com/RenderCoder/ecommerce-multilingual-copy",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "ecommerce",
+    "multilingual",
+    "copywriting",
+    "amazon",
+    "aliexpress",
+    "localization",
+    "translation"
+  ],
+  "skills": ["ecommerce-multilingual-copy"]
+}

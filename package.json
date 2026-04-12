@@ -1,0 +1,29 @@
+{
+  "name": "ecommerce-multilingual-copy",
+  "version": "1.0.0",
+  "description": "Claude Code plugin for multilingual e-commerce copywriting with 4-step reflective translation pipeline",
+  "type": "module",
+  "scripts": {
+    "dev": "claude --plugin-dir .",
+    "test": "bun test",
+    "lint": "bunx biome check .",
+    "lint:fix": "bunx biome check --write .",
+    "format": "bunx biome format --write .",
+    "validate": "bun run scripts/validate-skill.ts"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/bun": "latest"
+  },
+  "keywords": [
+    "claude-code",
+    "claude-code-plugin",
+    "ecommerce",
+    "multilingual",
+    "copywriting",
+    "amazon",
+    "localization"
+  ],
+  "author": "Bevis",
+  "license": "MIT"
+}

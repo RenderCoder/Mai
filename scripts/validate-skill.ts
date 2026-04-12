@@ -1,0 +1,151 @@
+#!/usr/bin/env bun
+
+/**
+ * validate-skill.ts — 验证插件结构完整性
+ *
+ * 检查项：
+ * 1. plugin.json 存在且包含必要字段
+ * 2. 声明的 skill 目录和 SKILL.md 存在
+ * 3. SKILL.md 有有效的 frontmatter
+ * 4. 所有 Markdown 引用的 reference 文件存在
+ * 5. docs/examples 示例文件存在
+ */
+
+import { existsSync } from "fs";
+import { resolve, join, dirname } from "path";
+
+const ROOT = resolve(import.meta.dir, "..");
+let errors = 0;
+let warnings = 0;
+
+function pass(msg: string) {
+  console.log(`  ✅ ${msg}`);
+}
+
+function fail(msg: string) {
+  console.log(`  ❌ ${msg}`);
+  errors++;
+}
+
+function warn(msg: string) {
+  console.log(`  ⚠️  ${msg}`);
+  warnings++;
+}
+
+console.log("🔍 Validating ecommerce-multilingual-copy plugin...\n");
+
+// 1. Check plugin.json
+console.log("1. Plugin manifest");
+const pluginJsonPath = join(ROOT, ".claude-plugin", "plugin.json");
+if (!existsSync(pluginJsonPath)) {
+  fail(".claude-plugin/plugin.json not found");
+} else {
+  const pluginJson = await Bun.file(pluginJsonPath).json();
+
+  if (!pluginJson.name) fail("plugin.json: missing 'name'");
+  else pass(`plugin.json: name = "${pluginJson.name}"`);
+
+  if (!pluginJson.version) fail("plugin.json: missing 'version'");
+  else pass(`plugin.json: version = "${pluginJson.version}"`);
+
+  if (!pluginJson.description) fail("plugin.json: missing 'description'");
+  else pass("plugin.json: description present");
+
+  if (!pluginJson.skills || !Array.isArray(pluginJson.skills) || pluginJson.skills.length === 0) {
+    fail("plugin.json: missing or empty 'skills' array");
+  } else {
+    pass(`plugin.json: skills = [${pluginJson.skills.join(", ")}]`);
+  }
+}
+
+// 2. Check skill directory and SKILL.md
+console.log("\n2. Skill files");
+const skillDir = join(ROOT, "skills", "ecommerce-multilingual-copy");
+if (!existsSync(skillDir)) {
+  fail("skills/ecommerce-multilingual-copy/ directory not found");
+} else {
+  pass("skills/ecommerce-multilingual-copy/ directory exists");
+
+  const skillMdPath = join(skillDir, "SKILL.md");
+  if (!existsSync(skillMdPath)) {
+    fail("SKILL.md not found");
+  } else {
+    const content = await Bun.file(skillMdPath).text();
+
+    // Check frontmatter
+    const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+    if (!fmMatch) {
+      fail("SKILL.md: no valid frontmatter found");
+    } else {
+      const fm = fmMatch[1];
+      if (!fm.includes("name:")) fail("SKILL.md: frontmatter missing 'name'");
+      else pass("SKILL.md: frontmatter has 'name'");
+
+      if (!fm.includes("description:")) fail("SKILL.md: frontmatter missing 'description'");
+      else pass("SKILL.md: frontmatter has 'description'");
+
+      if (!fm.includes("argument-hint:")) warn("SKILL.md: frontmatter missing 'argument-hint'");
+      else pass("SKILL.md: frontmatter has 'argument-hint'");
+    }
+
+    // Check reference links
+    const linkPattern = /\[.*?\]\((references\/[^)]+)\)/g;
+    let match;
+    while ((match = linkPattern.exec(content)) !== null) {
+      const refPath = join(skillDir, match[1]);
+      if (!existsSync(refPath)) {
+        fail(`SKILL.md references ${match[1]} but file not found`);
+      } else {
+        pass(`Reference link resolves: ${match[1]}`);
+      }
+    }
+  }
+}
+
+// 3. Check reference files
+console.log("\n3. Reference files");
+const refFiles = ["compliance-rules.md", "output-format.md", "copy-types.md"];
+for (const file of refFiles) {
+  const path = join(skillDir, "references", file);
+  if (!existsSync(path)) {
+    fail(`references/${file} not found`);
+  } else {
+    const stat = Bun.file(path);
+    const size = stat.size;
+    pass(`references/${file} (${size} bytes)`);
+  }
+}
+
+// 4. Check example files
+console.log("\n4. Example files");
+const exampleFiles = ["WT702.md", "_TEMPLATE.md", "sample-requirement.md"];
+for (const file of exampleFiles) {
+  const path = join(ROOT, "docs", "examples", file);
+  if (!existsSync(path)) {
+    fail(`docs/examples/${file} not found`);
+  } else {
+    pass(`docs/examples/${file}`);
+  }
+}
+
+// 5. Check other project files
+console.log("\n5. Project files");
+const projectFiles = ["package.json", "tsconfig.json", "biome.json", "LICENSE", "README.md", ".gitignore"];
+for (const file of projectFiles) {
+  const path = join(ROOT, file);
+  if (!existsSync(path)) {
+    warn(`${file} not found`);
+  } else {
+    pass(file);
+  }
+}
+
+// Summary
+console.log("\n" + "─".repeat(50));
+if (errors === 0 && warnings === 0) {
+  console.log("✅ All checks passed!");
+} else {
+  if (errors > 0) console.log(`❌ ${errors} error(s) found`);
+  if (warnings > 0) console.log(`⚠️  ${warnings} warning(s) found`);
+}
+process.exit(errors > 0 ? 1 : 0);
