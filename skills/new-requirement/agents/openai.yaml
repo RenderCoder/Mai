@@ -1,0 +1,7 @@
+interface:
+  display_name: "New Copy Requirement"
+  short_description: "Create a copywriting brief file"
+  default_prompt: "Use $new-requirement to create a copywriting requirement template and save it to my chosen folder."
+
+policy:
+  allow_implicit_invocation: true

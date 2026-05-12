@@ -9,11 +9,14 @@ argument-hint: "<requirement-name> [target-directory] [--type copy-type]"
 
 ## 功能
 
-根据用户提供的需求名称，生成一个预填好名称和文案类型的文案需求 Markdown 模板文件。用户随后可在文件中填写画面描述、卖点、草稿等信息，供 `/ecommerce-multilingual-copy --requirement <path>` 使用。
+根据用户提供的需求名称，生成一个预填好名称和文案类型的文案需求 Markdown 模板文件。用户随后可在文件中填写画面描述、卖点、草稿等信息，供 Claude Code 的 `/ecommerce-multilingual-copy --requirement <path>` 或 Codex 的 `$ecommerce-multilingual-copy --requirement <path>` 使用。
 
 ## 输入解析
 
-解析 `$ARGUMENTS` 获取参数：
+根据当前运行环境解析输入：
+
+- Claude Code：解析 `$ARGUMENTS`。
+- Codex：解析用户消息中紧跟 `$new-requirement` 后的内容，或用户自然语言中给出的需求名称、目录和文案类型。
 
 - **$0**（必须）：需求名称（如 `wt702-image3`、`listing-rewrite-v2`）
 - **$1**（可选）：目标目录路径，支持绝对路径和 `~` 展开。默认为当前工作目录
@@ -23,8 +26,9 @@ argument-hint: "<requirement-name> [target-directory] [--type copy-type]"
 - `/ecommerce-multilingual-copy:new-requirement wt702-image3` → 当前目录创建 `wt702-image3.md`（默认 image-copy 类型）
 - `/ecommerce-multilingual-copy:new-requirement listing-v2 ~/tasks/ --type full-listing` → 在 `~/tasks/` 创建 `listing-v2.md`
 - `/ecommerce-multilingual-copy:new-requirement wt702-tagline ~/tasks/ --type tagline`
+- `使用 $new-requirement 创建 wt702-image3 到 ~/tasks/，类型 image-copy` → Codex 中创建 `~/tasks/wt702-image3.md`
 
-**无参数调用**：依次询问需求名称、目标目录、文案类型。
+**无参数调用**：依次询问需求名称、目标目录、文案类型。若无法判断保存目录，询问用户要把模板保存到哪个文件夹。
 
 ## 执行步骤
 
@@ -32,8 +36,8 @@ argument-hint: "<requirement-name> [target-directory] [--type copy-type]"
 2. 确定输出文件路径：`<目标目录>/<需求名称>.md`
 3. 检查文件是否已存在。若已存在，提示用户确认是否覆盖
 4. 根据文案类型选择对应模板（见下方），其中 `{{REQUIREMENT_NAME}}` 替换为用户输入的需求名称，`{{COPY_TYPE}}` 替换为文案类型
-5. 使用 Write 工具创建文件
-6. 输出："✅ 文案需求模板已创建：`<完整文件路径>`\n\n请编辑该文件填写需求信息后，配合产品知识库使用：\n`/ecommerce-multilingual-copy --product <产品文件> --requirement <完整文件路径>`"
+5. 使用当前环境可用的文件写入能力创建文件
+6. 输出："✅ 文案需求模板已创建：`<完整文件路径>`\n\n请编辑该文件填写需求信息后，配合产品知识库使用：\nClaude Code：`/ecommerce-multilingual-copy --product <产品文件> --requirement <完整文件路径>`\nCodex：`使用 $ecommerce-multilingual-copy --product <产品文件> --requirement <完整文件路径>`"
 
 ## 模板内容
 

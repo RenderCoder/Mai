@@ -1,0 +1,7 @@
+interface:
+  display_name: "Ecommerce Multilingual Copy"
+  short_description: "Generate marketplace copy in CN EN DE ES"
+  default_prompt: "Use $ecommerce-multilingual-copy to generate multilingual marketplace copy from my product file and save the result as a document."
+
+policy:
+  allow_implicit_invocation: true

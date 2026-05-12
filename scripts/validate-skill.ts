@@ -1,22 +1,37 @@
 #!/usr/bin/env bun
 
 /**
- * validate-skill.ts — 验证插件结构完整性
+ * validate-skill.ts — 验证 Claude Code 插件和 Codex skill 结构完整性
  *
  * 检查项：
  * 1. plugin.json 存在且包含必要字段
  * 2. 声明的 skill 目录和 SKILL.md 存在
  * 3. SKILL.md 有有效的 frontmatter
  * 4. 所有 Markdown 引用的 reference 文件存在
- * 5. docs/examples 示例文件存在
+ * 5. Codex agents/openai.yaml 和 skill-local scripts 存在
+ * 6. docs/examples 示例文件存在
  */
 
-import { existsSync } from "fs";
-import { resolve, join, dirname } from "path";
+import { existsSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dir, "..");
 let errors = 0;
 let warnings = 0;
+
+interface PluginManifest {
+  name?: unknown;
+  version?: unknown;
+  description?: unknown;
+  skills?: unknown;
+}
+
+async function readPluginManifest(
+  pluginJsonPath: string,
+): Promise<PluginManifest | null> {
+  if (!existsSync(pluginJsonPath)) return null;
+  return (await Bun.file(pluginJsonPath).json()) as PluginManifest;
+}
 
 function pass(msg: string) {
   console.log(`  ✅ ${msg}`);
@@ -32,16 +47,15 @@ function warn(msg: string) {
   warnings++;
 }
 
-console.log("🔍 Validating ecommerce-multilingual-copy plugin...\n");
+console.log("🔍 Validating ecommerce-multilingual-copy skills...\n");
 
 // 1. Check plugin.json
 console.log("1. Plugin manifest");
 const pluginJsonPath = join(ROOT, ".claude-plugin", "plugin.json");
-if (!existsSync(pluginJsonPath)) {
+const pluginJson = await readPluginManifest(pluginJsonPath);
+if (!pluginJson) {
   fail(".claude-plugin/plugin.json not found");
 } else {
-  const pluginJson = await Bun.file(pluginJsonPath).json();
-
   if (!pluginJson.name) fail("plugin.json: missing 'name'");
   else pass(`plugin.json: name = "${pluginJson.name}"`);
 
@@ -51,7 +65,11 @@ if (!existsSync(pluginJsonPath)) {
   if (!pluginJson.description) fail("plugin.json: missing 'description'");
   else pass("plugin.json: description present");
 
-  if (!pluginJson.skills || !Array.isArray(pluginJson.skills) || pluginJson.skills.length === 0) {
+  if (
+    !pluginJson.skills ||
+    !Array.isArray(pluginJson.skills) ||
+    pluginJson.skills.length === 0
+  ) {
     fail("plugin.json: missing or empty 'skills' array");
   } else {
     pass(`plugin.json: skills = [${pluginJson.skills.join(", ")}]`);
@@ -60,8 +78,10 @@ if (!existsSync(pluginJsonPath)) {
 
 // 2. Check all skill directories and SKILL.md files
 console.log("\n2. Skill files");
-const pluginSkills = existsSync(pluginJsonPath)
-  ? (await Bun.file(pluginJsonPath).json()).skills as string[]
+const pluginSkills = Array.isArray(pluginJson?.skills)
+  ? pluginJson.skills.filter(
+      (skill): skill is string => typeof skill === "string",
+    )
   : ["ecommerce-multilingual-copy"];
 
 for (const skillName of pluginSkills) {
@@ -86,25 +106,45 @@ for (const skillName of pluginSkills) {
     fail(`skills/${skillName}/SKILL.md: no valid frontmatter found`);
   } else {
     const fm = fmMatch[1];
-    if (!fm.includes("name:")) fail(`skills/${skillName}/SKILL.md: frontmatter missing 'name'`);
+    if (!fm.includes("name:"))
+      fail(`skills/${skillName}/SKILL.md: frontmatter missing 'name'`);
     else pass(`skills/${skillName}/SKILL.md: frontmatter has 'name'`);
 
-    if (!fm.includes("description:")) fail(`skills/${skillName}/SKILL.md: frontmatter missing 'description'`);
+    if (!fm.includes("description:"))
+      fail(`skills/${skillName}/SKILL.md: frontmatter missing 'description'`);
     else pass(`skills/${skillName}/SKILL.md: frontmatter has 'description'`);
 
-    if (!fm.includes("argument-hint:")) warn(`skills/${skillName}/SKILL.md: frontmatter missing 'argument-hint'`);
+    if (!fm.includes("argument-hint:"))
+      warn(`skills/${skillName}/SKILL.md: frontmatter missing 'argument-hint'`);
     else pass(`skills/${skillName}/SKILL.md: frontmatter has 'argument-hint'`);
   }
 
   // Check reference links (only for skills that have them)
   const linkPattern = /\[.*?\]\((references\/[^)]+)\)/g;
-  let match;
-  while ((match = linkPattern.exec(content)) !== null) {
+  let match: RegExpExecArray | null = linkPattern.exec(content);
+  while (match !== null) {
     const refPath = join(sDir, match[1]);
     if (!existsSync(refPath)) {
-      fail(`skills/${skillName}/SKILL.md references ${match[1]} but file not found`);
+      fail(
+        `skills/${skillName}/SKILL.md references ${match[1]} but file not found`,
+      );
     } else {
       pass(`Reference link resolves: ${match[1]}`);
+    }
+    match = linkPattern.exec(content);
+  }
+
+  const openAiYamlPath = join(sDir, "agents", "openai.yaml");
+  if (!existsSync(openAiYamlPath)) {
+    warn(`skills/${skillName}/agents/openai.yaml not found`);
+  } else {
+    const openAiYaml = await Bun.file(openAiYamlPath).text();
+    if (!openAiYaml.includes("display_name:")) {
+      fail(`skills/${skillName}/agents/openai.yaml: missing display_name`);
+    } else if (!openAiYaml.includes("default_prompt:")) {
+      fail(`skills/${skillName}/agents/openai.yaml: missing default_prompt`);
+    } else {
+      pass(`skills/${skillName}/agents/openai.yaml`);
     }
   }
 }
@@ -126,7 +166,19 @@ for (const file of refFiles) {
 }
 
 // 4. Check example files
-console.log("\n4. Example files");
+console.log("\n4. Skill-local scripts");
+const skillScriptFiles = ["scripts/save-result.ts"];
+for (const file of skillScriptFiles) {
+  const path = join(skillDir, file);
+  if (!existsSync(path)) {
+    fail(`skills/ecommerce-multilingual-copy/${file} not found`);
+  } else {
+    pass(`skills/ecommerce-multilingual-copy/${file}`);
+  }
+}
+
+// 5. Check example files
+console.log("\n5. Example files");
 const exampleFiles = ["WT702.md", "_TEMPLATE.md", "sample-requirement.md"];
 for (const file of exampleFiles) {
   const path = join(ROOT, "docs", "examples", file);
@@ -137,9 +189,16 @@ for (const file of exampleFiles) {
   }
 }
 
-// 5. Check other project files
-console.log("\n5. Project files");
-const projectFiles = ["package.json", "tsconfig.json", "biome.json", "LICENSE", "README.md", ".gitignore"];
+// 6. Check other project files
+console.log("\n6. Project files");
+const projectFiles = [
+  "package.json",
+  "tsconfig.json",
+  "biome.json",
+  "LICENSE",
+  "README.md",
+  ".gitignore",
+];
 for (const file of projectFiles) {
   const path = join(ROOT, file);
   if (!existsSync(path)) {
@@ -150,7 +209,7 @@ for (const file of projectFiles) {
 }
 
 // Summary
-console.log("\n" + "─".repeat(50));
+console.log(`\n${"─".repeat(50)}`);
 if (errors === 0 && warnings === 0) {
   console.log("✅ All checks passed!");
 } else {

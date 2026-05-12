@@ -1,152 +1,169 @@
 # ecommerce-multilingual-copy
 
-A Claude Code plugin that generates multilingual e-commerce copy (CN/EN/DE/ES) using a 4-step reflective translation pipeline.
+Multilingual e-commerce copywriting skills for **Codex** and **Claude Code**.
 
-> **一键生成亚马逊/速卖通多语言电商文案的 Claude Code 插件。**
+It turns a product file into Amazon/AliExpress-ready copy in Chinese, English, German, and Spanish, then saves the result as a Markdown document.
 
-## Features
+## For New Users
 
-- **4-Step Reflective Pipeline**: Draft -> Ruthless Review -> Final Rewrite + Back-Translation -> Human Verification
-- **6 Copy Types**: Full Listing, Title, Bullets, A+ Content, Tagline, Image Copy
-- **4 Languages by Default**: Chinese, English, German, Spanish (configurable)
-- **File-Based Workflow**: Product knowledge and requirements as file paths — easy to manage and version
-- **Auto-Save Results**: Output automatically saved alongside your requirement/product files
-- **Compliance Engine**: Built-in forbidden words, platform rules, and product-level overrides
-- **Back-Translation QA**: German/Spanish translated back to Chinese for semantic verification
+You only need three things:
 
-## Installation
+1. Install the skill.
+2. Make one product file.
+3. Ask Codex or Claude Code to generate copy from that file.
 
-### From GitHub
+### One-Click Codex Install
+
+If you already downloaded this project:
+
+```bash
+bun install
+bun run install:codex
+```
+
+Restart Codex after installation.
+
+To install into a different Codex home:
+
+```bash
+bun run install:codex -- --codex-home ~/.codex
+```
+
+If Codex says the skill already exists:
+
+```bash
+bun run install:codex -- --force
+```
+
+### Claude Code Install
+
+From GitHub:
 
 ```bash
 npx skills add RenderCoder/ecommerce-multilingual-copy@ecommerce-multilingual-copy
 ```
 
-### Local Development
+Local development:
 
 ```bash
 git clone https://github.com/RenderCoder/ecommerce-multilingual-copy.git
 cd ecommerce-multilingual-copy
 bun install
-bun run dev  # or: claude --plugin-dir .
+bun run dev
 ```
 
-## Quick Start
+## Simple Start
 
-### 1. Create a Product Knowledge Base
+### 1. Create a Product File
 
-Use the built-in template generator:
+In Codex:
 
-```bash
+```text
+Use $new-product to create WT801 in ~/my-products/
+```
+
+In Claude Code:
+
+```text
 /ecommerce-multilingual-copy:new-product WT801 ~/my-products/
-# Creates ~/my-products/WT801.md with all sections pre-filled
-# Edit the file with your product specs, selling points, SEO keywords, etc.
 ```
 
-Or copy the template manually: `cp docs/examples/_TEMPLATE.md ~/my-products/MyProduct.md`
+Open `~/my-products/WT801.md` and fill in the blanks: brand, specs, selling points, SEO keywords, and compliance notes.
 
-### 2. Run the Skill
+### 2. Generate Copy
 
-```bash
-# Full listing (all 8 fields)
-/ecommerce-multilingual-copy --product ~/my-products/MyProduct.md
+In Codex:
 
-# Title only (simplified mode)
-/ecommerce-multilingual-copy --product ~/my-products/MyProduct.md title
-
-# With a requirement file (e.g., image copy brief)
-/ecommerce-multilingual-copy --product ~/my-products/MyProduct.md --requirement ~/tasks/image-brief.md
-
-# Custom languages
-/ecommerce-multilingual-copy --product ~/my-products/MyProduct.md --languages CN,EN,FR
+```text
+Use $ecommerce-multilingual-copy --product ~/my-products/WT801.md title
 ```
 
-### 3. Get Results
+In Claude Code:
 
-The skill outputs a Markdown table you can directly paste into Excel, Google Sheets, or Figma. If you used `--requirement` or `--product`, results are also auto-saved as:
-
-```
-~/tasks/image-brief_result_20260412.md
+```text
+/ecommerce-multilingual-copy --product ~/my-products/WT801.md title
 ```
 
-## Parameters
+### 3. Find the Result
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `--product <path>` | Yes | Path to product knowledge base file |
-| `--requirement <path>` | No | Path to requirement/brief file |
-| `copy-type` | No | `full-listing` (default), `title`, `bullets`, `a-plus`, `tagline`, `image-copy` |
-| `--languages XX,XX` | No | Override languages (default: `CN,EN,DE,ES`) |
-| `--platform` | No | `amazon` (default) or `aliexpress` |
+The result is saved beside the product or requirement file, for example:
+
+```text
+~/my-products/WT801_title_result_20260512.md
+```
+
+If the AI cannot tell where to save the file, it should ask you for a folder path.
+
+## Common Tasks
+
+Create a full listing:
+
+```text
+Use $ecommerce-multilingual-copy --product ~/my-products/WT801.md
+```
+
+Create only bullet points:
+
+```text
+Use $ecommerce-multilingual-copy --product ~/my-products/WT801.md bullets
+```
+
+Create image copy from a brief:
+
+```text
+Use $new-requirement to create wt801-image2 in ~/tasks/ with type image-copy
+Use $ecommerce-multilingual-copy --product ~/my-products/WT801.md --requirement ~/tasks/wt801-image2.md
+```
+
+Change languages:
+
+```text
+Use $ecommerce-multilingual-copy --product ~/my-products/WT801.md --languages CN,EN,DE,ES
+```
+
+## What It Produces
+
+- Final multilingual copy table
+- German and Spanish back-translation check
+- Short execution summary
+- Change log
+- Saved Markdown result document
 
 ## Copy Types
 
-| Type | Output Fields | Pipeline |
-|------|--------------|----------|
-| `full-listing` | Title + Subtitle + 5 Bullets + Short Description | Full 4-step |
-| `title` | Title + Subtitle | Simplified |
-| `bullets` | 5 Bullet Points | Full (condensed back-translation) |
-| `a-plus` | Banner + 4 Feature Modules | Full 4-step |
-| `tagline` | 1-2 line creative copy | Simplified |
-| `image-copy` | Headline + Subline + Tag Copy | Full 4-step |
+| Type | Best for |
+| --- | --- |
+| `full-listing` | Title, subtitle, 5 bullets, short description |
+| `title` | Product title and subtitle |
+| `bullets` | Five product bullet points |
+| `a-plus` | Amazon A+ modules |
+| `tagline` | Short slogans |
+| `image-copy` | Main image or feature image text |
 
-## Product Knowledge Base Format
+## Parameters
 
-See `docs/examples/_TEMPLATE.md` for the full template. Key sections:
-
-- **Basic Info**: Brand, model, category, target markets
-- **Core Specs**: Technical specifications table
-- **Selling Points**: Prioritized list of differentiators
-- **SEO Keywords**: Per-language keyword groups (EN/DE/ES)
-- **Compliance Overrides**: Product-specific allowed/forbidden claims
-- **Mandatory Terms**: Terms that must appear in all copy
-- **Unit Localization**: GAL for North America, L for Europe
-
-## Utility Skills
-
-### Create Product Knowledge Base
-
-```bash
-/ecommerce-multilingual-copy:new-product <product-name> [target-directory]
-
-# Examples
-/ecommerce-multilingual-copy:new-product WT801 ~/my-products/
-/ecommerce-multilingual-copy:new-product WBG-B32
-```
-
-Creates a product knowledge base template with all required sections (specs, selling points, SEO keywords, compliance rules, etc.) pre-structured and ready to fill in.
-
-### Create Requirement File
-
-```bash
-/ecommerce-multilingual-copy:new-requirement <name> [target-directory] [--type copy-type]
-
-# Examples
-/ecommerce-multilingual-copy:new-requirement wt702-image3 ~/tasks/
-/ecommerce-multilingual-copy:new-requirement listing-v2 ~/tasks/ --type full-listing
-/ecommerce-multilingual-copy:new-requirement brand-tagline ~/tasks/ --type tagline
-```
-
-Creates a requirement template tailored to the specified copy type (default: `image-copy`). Each type has its own template with relevant sections.
-
-## How the Pipeline Works
-
-1. **Draft Generation** — Expert copywriter role creates initial multilingual table
-2. **Ruthless Review** — Forced perspective switch to a harsh editor role that finds every flaw
-3. **Final Rewrite + Back-Translation** — Master copywriter absorbs feedback; DE/ES back-translated to CN for verification
-4. **Human Handoff** — Clean tables, back-translation check, execution summary, changelog
+| Parameter | Required | Meaning |
+| --- | --- | --- |
+| `--product <path>` | Yes | Product knowledge file |
+| `--requirement <path>` | No | Copy brief file |
+| `copy-type` | No | `full-listing`, `title`, `bullets`, `a-plus`, `tagline`, `image-copy` |
+| `--languages XX,XX` | No | Default: `CN,EN,DE,ES` |
+| `--platform` | No | Default: `amazon`; also supports `aliexpress` |
 
 ## Development
 
 ```bash
-bun install                # Install dev dependencies
-bun run dev                # Launch Claude Code with this plugin
-bun run validate           # Check plugin structure integrity
-bun run lint               # Lint TypeScript files
-bun run format             # Format TypeScript files
+bun install
+bun run validate
+bun test
+bun run lint
 ```
 
-See `docs/development-context.md` for full development documentation.
+Useful scripts:
+
+- `bun run install:codex` installs the skills into `$CODEX_HOME/skills` or `~/.codex/skills`.
+- `bun run validate` checks plugin and skill structure.
+- `bun run bin/save-result.ts --help` shows the result-saving helper.
 
 ## License
 

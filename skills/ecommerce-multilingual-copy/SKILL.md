@@ -23,7 +23,12 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 
 ## 输入解析
 
-解析 `$ARGUMENTS` 获取工作参数：
+根据当前运行环境解析用户输入：
+
+- **Claude Code**：解析 `$ARGUMENTS`。
+- **Codex**：解析用户消息中紧跟 `$ecommerce-multilingual-copy` 后的内容，或用户自然语言中给出的文件路径和选项。
+
+无论在哪个环境，都按同一套参数理解：
 
 **参数格式**：`--product <path> [--requirement <path>] [copy-type] [--languages XX,XX,XX] [--platform amazon|aliexpress]`
 
@@ -34,18 +39,19 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 - **--platform**（可选）：覆盖默认平台，默认 `amazon`
 
 **示例调用**：
-- `/ecommerce-multilingual-copy --product ~/products/WT702.md` → 完整 Listing，CN/EN/DE/ES，Amazon
-- `/ecommerce-multilingual-copy --product ~/products/WT702.md title` → 仅标题
-- `/ecommerce-multilingual-copy --product ~/products/WT702.md --requirement ~/tasks/image2-brief.md` → 按需求文件生成
-- `/ecommerce-multilingual-copy --product ~/products/WT702.md bullets --languages CN,EN,FR` → 仅要点，含法语
+- Claude Code：`/ecommerce-multilingual-copy --product ~/products/WT702.md`
+- Claude Code：`/ecommerce-multilingual-copy --product ~/products/WT702.md title`
+- Codex：`使用 $ecommerce-multilingual-copy --product ~/products/WT702.md --requirement ~/tasks/image2-brief.md`
+- Codex：`用 $ecommerce-multilingual-copy 给 ~/products/WT702.md 生成 bullets，语言 CN,EN,FR`
 
 **无参数调用**：进入交互模式，依次询问：
 1. 产品知识库文件路径（或在对话中直接提供产品规格）
 2. 文案类型
 3. 是否有需求文件路径
 4. 是否有草稿文案
+5. 若无法从产品/需求文件推断保存目录，询问结果要写入哪个目录
 
-**路径处理**：遇到 `~` 开头的路径时，展开为用户主目录。所有路径使用 Read 工具读取。
+**路径处理**：遇到 `~` 开头的路径时，展开为用户主目录。使用当前环境可用的文件读取能力读取路径：Claude Code 使用 Read 工具；Codex 使用本地文件工具或 shell 只读命令读取。
 
 ---
 
@@ -53,8 +59,8 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 
 **执行步骤**：
 
-1. 解析 `$ARGUMENTS` 中的 `--product` 参数获取文件路径
-   - 使用 Read 工具读取该文件
+1. 从输入中获取 `--product` 参数或用户明确给出的产品知识库路径
+   - 使用当前环境可用的文件读取能力读取该文件
    - 若文件不存在，提示用户："未找到产品知识库文件 `<path>`。请确认文件路径正确。产品知识库模板结构如下：
 
      ```
@@ -97,9 +103,9 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 
 ### 需求文件加载
 
-若 `$ARGUMENTS` 中包含 `--requirement <path>` 参数：
+若输入中包含 `--requirement <path>` 参数：
 
-1. 使用 Read 工具读取需求文件
+1. 使用当前环境可用的文件读取能力读取需求文件
 2. 从文件内容中提取：
    - 文案类型（如果文件中指定了，覆盖命令行参数中的 copy-type）
    - 文案上下文：画面描述、图片序号/位置、核心传达卖点
@@ -110,11 +116,11 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
    - 其他特殊要求
 3. 记住需求文件路径，用于后续结果保存
 
-若 `$ARGUMENTS` 中**未包含** `--requirement` 但用户在调用时直接附带了文案需求文本（紧跟在参数之后的自由文本），则将该文本视为内联需求。
+若输入中**未包含** `--requirement` 但用户直接附带了文案需求文本（紧跟在参数之后的自由文本或自然语言要求），则将该文本视为内联需求。
 
 ### 结果自动保存规则
 
-**在第四步（人工核对呈现）的全部内容输出完成后，必须执行以下保存操作**：
+**在第四步（人工核对呈现）的全部内容完成后，必须优先写入文档，而不是只在对话里输出。**
 
 **情况 1：提供了 `--requirement` 参数**
 1. 从需求文件路径提取目录和文件名（不含扩展名）
@@ -128,8 +134,14 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 2. 生成结果文件路径：`<产品文件所在目录>/<产品文件名>_<copy-type>_result_<YYYYMMDD>.md`
    - 例：产品文件为 `~/products/WT702.md`，文案类型为 `title` → 结果保存为 `~/products/WT702_title_result_20260412.md`
 
-**情况 3：无参数调用（交互模式）**
-- 不自动保存。在终端直接输出结果。提示用户可手动复制。
+**情况 3：用户指定了输出目录或输出文件**
+- 若用户说“保存到某目录”，生成：`<用户指定目录>/<产品名或需求名>_<copy-type>_result_<YYYYMMDD>.md`
+- 若用户说“保存为某文件”，直接写入该文件；若文件已存在，先询问是否覆盖，或改用追加时间后缀的新文件名。
+
+**情况 4：无法判断保存目录**
+- 不要默认只在对话中输出。
+- 先询问用户：“结果要保存到哪个文件夹？你可以给我一个路径，例如 `~/Desktop/copy-results/`。”
+- 用户给出目录后再写入结果文件。
 
 **结果文件内容格式**：
 ```markdown
@@ -159,7 +171,12 @@ generated: [YYYY-MM-DD HH:mm]
 </details>
 ```
 
-**使用 Write 工具写入结果文件。写入完成后，告知用户**："`结果已保存至 <完整文件路径>`"
+**保存方式**：
+- Claude Code：优先使用 Write 工具写入结果文件。
+- Codex：优先使用本地文件编辑/写入能力写入结果文件。
+- 若当前环境允许执行脚本，也可使用本技能内置脚本：`skills/ecommerce-multilingual-copy/scripts/save-result.ts`。示例：`bun run <skill-dir>/scripts/save-result.ts --product <path> --copy-type title --content <临时结果文件>`。
+
+写入完成后，告知用户：`✅ 结果已保存至 <完整文件路径>`。
 
 若写入失败（如目录不存在或权限不足），提示用户确认目标目录的写入权限，并在终端输出完整结果供手动复制。
 
@@ -394,7 +411,7 @@ generated: [YYYY-MM-DD HH:mm]
 
 **此步骤在上述 4.1-4.4 全部输出完成后自动执行，无需用户确认。**
 
-按照前文"结果自动保存规则"章节的规定，将完整结果（4.1-4.4）写入结果文件。使用 Write 工具。
+按照前文"结果自动保存规则"章节的规定，将完整结果（4.1-4.4）写入结果文件。若无法判断保存目录，先询问用户目标文件夹，再写入文档。
 
 保存后输出："`✅ 结果已保存至 <完整文件路径>`"
 

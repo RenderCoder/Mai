@@ -9,11 +9,14 @@ argument-hint: "<product-name> [target-directory]"
 
 ## 功能
 
-根据用户提供的产品型号名称，生成一个预填好名称的产品知识库 Markdown 模板文件。用户随后可在文件中填写产品规格、卖点、SEO 关键词等信息，供 `/ecommerce-multilingual-copy` 技能使用。
+根据用户提供的产品型号名称，生成一个预填好名称的产品知识库 Markdown 模板文件。用户随后可在文件中填写产品规格、卖点、SEO 关键词等信息，供 Claude Code 的 `/ecommerce-multilingual-copy` 或 Codex 的 `$ecommerce-multilingual-copy` 使用。
 
 ## 输入解析
 
-解析 `$ARGUMENTS` 获取参���：
+根据当前运行环境解析输入：
+
+- Claude Code：解析 `$ARGUMENTS`。
+- Codex：解析用户消息中紧跟 `$new-product` 后的内容，或用户自然语言中给出的产品型号和目录。
 
 - **$0**（必须）：产品型号名称（如 `WT801`、`WBG-B32`）
 - **$1**（可选）：目标目录路径，支持绝对路径和 `~` 展开。默认为当前工作目录
@@ -21,16 +24,17 @@ argument-hint: "<product-name> [target-directory]"
 **示例调用**：
 - `/ecommerce-multilingual-copy:new-product WT801` → 在当前目录创建 `WT801.md`
 - `/ecommerce-multilingual-copy:new-product WT801 ~/products/` → 在 `~/products/` 创建 `WT801.md`
+- `使用 $new-product 创建 WT801 到 ~/products/` → Codex 中创建 `~/products/WT801.md`
 
-**无参数调用**：询问用户产品型号名称和目标目录。
+**无参数调用**：询问用户产品型号名称和目标目录。若无法判断保存目录，询问用户要把模板保存到哪个文件夹。
 
 ## 执行步骤
 
 1. 解析产品名称和目标目录
 2. 确定输出文件路径：`<目标目录>/<产品名称>.md`
 3. 检查文件是否已存在。若已存在，提示用户确认是否覆盖
-4. 使用 Write 工具创建文件，内容为下方模板，其中 `{{PRODUCT_NAME}}` 替换为用户输入的产品名称
-5. 输出："✅ 产品知识库模板已创建：`<完整文件路径>`\n\n请编辑该文件，填写产品信息后即可使用：\n`/ecommerce-multilingual-copy --product <完整文件路径>`"
+4. 使用当前环境可用的文件写入能力创建文件，内容为下方模板，其中 `{{PRODUCT_NAME}}` 替换为用户输入的产品名称
+5. 输出："✅ 产品知识库模板已创建：`<完整文件路径>`\n\n请编辑该文件，填写产品信息后即可使用：\nClaude Code：`/ecommerce-multilingual-copy --product <完整文件路径>`\nCodex：`使用 $ecommerce-multilingual-copy --product <完整文件路径>`"
 
 ## 模板内容
 

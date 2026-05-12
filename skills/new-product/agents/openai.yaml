@@ -1,0 +1,7 @@
+interface:
+  display_name: "New Product Template"
+  short_description: "Create a product knowledge base file"
+  default_prompt: "Use $new-product to create a product knowledge base template and save it to my chosen folder."
+
+policy:
+  allow_implicit_invocation: true
