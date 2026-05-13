@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mai Copy"
+  short_description: "Generate marketplace copy"
+  default_prompt: "Use $mai-copy to draft marketplace copy, show counts and risks, then wait for my confirmation before saving."
+
+policy:
+  allow_implicit_invocation: true

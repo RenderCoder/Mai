@@ -47,7 +47,7 @@ function warn(msg: string) {
   warnings++;
 }
 
-console.log("🔍 Validating ecommerce-multilingual-copy skills...\n");
+console.log("🔍 Validating Mai skills...\n");
 
 // 1. Check plugin.json
 console.log("1. Plugin manifest");
@@ -82,7 +82,7 @@ const pluginSkills = Array.isArray(pluginJson?.skills)
   ? pluginJson.skills.filter(
       (skill): skill is string => typeof skill === "string",
     )
-  : ["ecommerce-multilingual-copy"];
+  : ["mai"];
 
 for (const skillName of pluginSkills) {
   const sDir = join(ROOT, "skills", skillName);
@@ -149,31 +149,34 @@ for (const skillName of pluginSkills) {
   }
 }
 
-const skillDir = join(ROOT, "skills", "ecommerce-multilingual-copy");
-
 // 3. Check reference files
 console.log("\n3. Reference files");
 const refFiles = ["compliance-rules.md", "output-format.md", "copy-types.md"];
 for (const file of refFiles) {
-  const path = join(skillDir, "references", file);
+  const path = join(ROOT, "skills", "mai", "references", file);
   if (!existsSync(path)) {
-    fail(`references/${file} not found`);
+    fail(`skills/mai/references/${file} not found`);
   } else {
     const stat = Bun.file(path);
-    const size = stat.size;
-    pass(`references/${file} (${size} bytes)`);
+    pass(`skills/mai/references/${file} (${stat.size} bytes)`);
   }
+}
+const workflowPath = join(ROOT, "skills", "mai", "references", "workflow.md");
+if (!existsSync(workflowPath)) {
+  fail("skills/mai/references/workflow.md not found");
+} else {
+  pass("skills/mai/references/workflow.md");
 }
 
 // 4. Check example files
 console.log("\n4. Skill-local scripts");
 const skillScriptFiles = ["scripts/save-result.ts"];
 for (const file of skillScriptFiles) {
-  const path = join(skillDir, file);
+  const path = join(ROOT, "skills", "mai", file);
   if (!existsSync(path)) {
-    fail(`skills/ecommerce-multilingual-copy/${file} not found`);
+    fail(`skills/mai/${file} not found`);
   } else {
-    pass(`skills/ecommerce-multilingual-copy/${file}`);
+    pass(`skills/mai/${file}`);
   }
 }
 

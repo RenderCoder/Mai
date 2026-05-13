@@ -9,5 +9,5 @@
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["bin/**/*.ts", "scripts/**/*.ts", "skills/**/*.ts"]
+  "include": ["bin/**/*.ts", "scripts/**/*.ts", "skills/mai/**/*.ts"]
 }

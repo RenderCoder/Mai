@@ -12,6 +12,6 @@
   },
   "files": {
     "include": ["bin/**/*.ts", "scripts/**/*.ts", "skills/**/*.ts"],
-    "ignore": ["node_modules", "dist"]
+    "ignore": ["node_modules", "dist", "skills/ecommerce-multilingual-copy"]
   }
 }

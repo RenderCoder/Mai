@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mai"
+  short_description: "Generate confirmed ecommerce copy"
+  default_prompt: "Use $mai to generate ecommerce copy, show the result first, then save it after I confirm."
+
+policy:
+  allow_implicit_invocation: true

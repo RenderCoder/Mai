@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mai Title"
+  short_description: "Generate ecommerce titles"
+  default_prompt: "Use $mai-title to create product title options with language and length checks."
+
+policy:
+  allow_implicit_invocation: true

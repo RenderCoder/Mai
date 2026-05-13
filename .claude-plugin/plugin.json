@@ -1,7 +1,7 @@
 {
-  "name": "ecommerce-multilingual-copy",
+  "name": "mai",
   "version": "1.0.0",
-  "description": "Generate multilingual e-commerce copy (CN/EN/DE/ES) using a 4-step reflective translation pipeline. Supports Codex and Claude Code, Amazon/AliExpress listings, image copy, A+ content, and taglines.",
+  "description": "Mai generates confirmed multilingual e-commerce copy for Codex and Claude Code. It supports short memorable entries for titles, copy, rich image/sketch briefs, product files, and copy briefs.",
   "author": {
     "name": "Bevis",
     "url": "https://github.com/RenderCoder"
@@ -21,5 +21,12 @@
     "localization",
     "translation"
   ],
-  "skills": ["ecommerce-multilingual-copy", "new-product", "new-requirement"]
+  "skills": [
+    "mai",
+    "mai-title",
+    "mai-copy",
+    "mai-rich",
+    "mai-product",
+    "mai-brief"
+  ]
 }

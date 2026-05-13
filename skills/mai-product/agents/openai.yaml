@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mai Product"
+  short_description: "Create product info files"
+  default_prompt: "Use $mai-product to create a product information template in my chosen folder."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mai Brief"
+  short_description: "Create copy brief template files"
+  default_prompt: "Use $mai-brief to create a copywriting brief template with layout and count constraints."
+
+policy:
+  allow_implicit_invocation: true

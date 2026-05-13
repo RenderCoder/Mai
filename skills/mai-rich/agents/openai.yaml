@@ -1,0 +1,7 @@
+interface:
+  display_name: "Mai Rich"
+  short_description: "Write copy from rich context"
+  default_prompt: "Use $mai-rich to write copy from my image, sketch, prototype, or detailed brief with layout checks."
+
+policy:
+  allow_implicit_invocation: true

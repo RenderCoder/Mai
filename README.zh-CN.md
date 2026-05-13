@@ -1,170 +1,238 @@
-# ecommerce-multilingual-copy
+# Mai 电商文案
 
-同时支持 **Codex** 和 **Claude Code** 的多语言电商文案技能。
+Mai 是一个给 **Codex** 和 **Claude Code** 用的电商多语言文案技能。
 
-它可以把一个产品资料文件变成适合亚马逊/速卖通使用的中文、英文、德语、西语文案，并把结果保存成 Markdown 文档。
+“Mai” 是“卖”的拼音，也可以理解成“卖货 AI”：把商品卖点写成能用于电商页面、图片和 Listing 的文案。
 
-## 给新手的最短流程
+它的重点不是让你记复杂命令，而是用几个短入口完成常见工作。你也可以完全用自然语言描述需求；如果缺少必要信息，Mai 会一个问题一个问题问你，并给出数字选项，你回复数字即可。
 
-你只需要做三件事：
+| 入口 | 用途 |
+| --- | --- |
+| `$mai` | 不确定用哪个时，就用这个 |
+| `$mai-title` | 生成标题、副标题、标题 A/B 方案 |
+| `$mai-copy` | 生成 Listing、五点、A+、标语、图片文案 |
+| `$mai-rich` | 根据图片、草图、原型图、复杂需求生成文案 |
+| `$mai-product` | 创建产品资料模板 |
+| `$mai-brief` | 创建文案需求模板 |
 
-1. 安装技能。
-2. 创建一个产品资料文件。
-3. 让 Codex 或 Claude Code 根据这个文件生成文案。
+## 安装
 
-### Codex 一键安装
+### 方式一：从 GitHub 安装
 
-如果你已经下载了这个项目：
+如果你已经把这个项目发布到 GitHub，可以在 Codex 里直接输入：
+
+```text
+使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai
+使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-title
+使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-copy
+使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-rich
+使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-product
+使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-brief
+```
+
+装好后重启 Codex，然后输入：
+
+```text
+使用 $mai
+```
+
+> 注意：请先安装 `mai`，再安装其它 `mai-*` 子入口。`mai-title`、`mai-copy` 和 `mai-rich` 会读取 `mai` 里的共享工作流规则。
+
+### 方式二：下载项目后一键安装
+
+在项目目录里运行：
 
 ```bash
 bun install
 bun run install:codex
 ```
 
-安装完成后，重启 Codex。
+然后重启 Codex。
 
-如果要安装到指定 Codex 目录：
-
-```bash
-bun run install:codex -- --codex-home ~/.codex
-```
-
-如果提示技能已存在，想覆盖更新：
+Claude Code 用户可以在本地运行：
 
 ```bash
-bun run install:codex -- --force
-```
-
-### Claude Code 安装
-
-从 GitHub 安装：
-
-```bash
-npx skills add RenderCoder/ecommerce-multilingual-copy@ecommerce-multilingual-copy
-```
-
-本地开发或试用：
-
-```bash
-git clone https://github.com/RenderCoder/ecommerce-multilingual-copy.git
-cd ecommerce-multilingual-copy
-bun install
 bun run dev
 ```
 
-## 普通用户怎么用
+### 发布建议
 
-### 1. 创建产品资料文件
+- 给普通用户：优先把上面的 `$skill-installer` 安装说明放到 README、飞书/Notion 或团队知识库里。
+- 给团队稳定使用：发布 GitHub Release，并在安装说明里写清楚版本号。
+- 如果要把 Mai 作为 Codex 里的正式可安装包分发，建议后续打包成 Codex plugin。OpenAI 文档建议：本地写作和测试可以直接用 skill；要分发多个 skill，plugin 更合适。
 
-在 Codex 里输入：
+## 最简单的用法
+
+### 1. 创建产品资料
 
 ```text
-使用 $new-product 创建 WT801 到 ~/my-products/
+使用 $mai-product 创建 WT801 到 ~/my-products/
 ```
 
-在 Claude Code 里输入：
+打开 `~/my-products/WT801.md`，把品牌、型号、规格、卖点、关键词填进去。
+
+### 2. 生成标题
 
 ```text
-/ecommerce-multilingual-copy:new-product WT801 ~/my-products/
+使用 $mai-title --product ~/my-products/WT801.md
 ```
 
-然后打开 `~/my-products/WT801.md`，填写品牌、规格、卖点、关键词、合规说明等空白项。
-
-### 2. 生成文案
-
-在 Codex 里输入：
+也可以不写参数：
 
 ```text
-使用 $ecommerce-multilingual-copy --product ~/my-products/WT801.md title
+使用 $mai-title 帮我给新品写标题
 ```
 
-在 Claude Code 里输入：
+Mai 会按顺序询问产品资料、平台、语言、长度、方案数量等缺失信息。
+
+### 3. 生成完整文案
 
 ```text
-/ecommerce-multilingual-copy --product ~/my-products/WT801.md title
+使用 $mai-copy --product ~/my-products/WT801.md
 ```
 
-### 3. 查看结果文件
-
-结果会优先保存到产品文件或需求文件旁边，例如：
+### 4. 根据图片或草图生成文案
 
 ```text
-~/my-products/WT801_title_result_20260512.md
+使用 $mai-rich --product ~/my-products/WT801.md
+根据这张草图生成主图文案，英文主标题不超过 4 个词，副标题不超过 6 个词
 ```
 
-如果 AI 不确定保存到哪里，它应该先问你要保存到哪个文件夹。
+## 新的交付规则
 
-## 常用命令
+Mai 不会一上来就写文件。
 
-生成完整 Listing：
+如果信息不完整，它会像这样一次问一个问题：
 
 ```text
-使用 $ecommerce-multilingual-copy --product ~/my-products/WT801.md
+我需要先确认一个选项：你要生成哪类文案？
+1. 标题/副标题
+2. 五点描述
+3. 完整 Listing
+4. A+ 内容
+5. 图片/草图文案
+请回复数字即可。
+```
+
+每次生成文案时，它应该先在对话里给你看：
+
+- 它对场景的理解
+- 要输出哪些语言
+- 当前假设和缺失信息
+- 文案结果
+- 字符数、词数、行数统计
+- 是否有二维排版风险
+- 合规风险
+
+你确认“没问题 / 可以 / 保存 / 写入”之后，它才会把结果写成 Markdown 文档。
+
+写入的文档会带上下文，包括：
+
+- 原始需求
+- 场景理解
+- 关键决策
+- 最终文案
+- 数量统计
+- 合规检查
+- 需要人工复核的事项
+
+## 常用示例
+
+典型完整用法：
+
+```text
+使用 $mai-rich --product ~/my-products/WT801.md --length minimal --languages CN,EN,DE,ES
+根据我上传的草图生成亚马逊副图文案。
+画面是一个智能浇水定时器连接两条水管，左边浇花坛，右边浇草坪。
+目标用户是家庭园艺用户。
+英文主标题不超过 4 个词，副标题不超过 6 个词，标签最多 3 个。
+先给我看文案和字符统计，不要直接写文档。
+```
+
+Mai 会先回复理解确认、文案表、字符/词数/行数统计和排版风险。你确认后，它再写入 Markdown 文档。
+
+更适合普通用户的自然语言用法：
+
+```text
+使用 $mai-rich 帮我根据这张草图写亚马逊副图文案。
+```
+
+如果你没有说明语言、长度、平台或产品资料，Mai 会逐项询问，并让你回复数字。
+
+## 长度档位
+
+你可以用 `--length` 选择文案长度：
+
+| 参数 | 中文说法 | 适合场景 |
+| --- | --- | --- |
+| `--length minimal` | 极简表达 | 主图、标签、按钮、小版位 |
+| `--length medium` | 中等 | 副图、详情页模块、常规标题 |
+| `--length full` | 完整 | Listing、A+、SEO 覆盖更完整的内容 |
+
+也可以直接用中文说：
+
+```text
+使用 $mai-title --product ~/my-products/WT801.md，长度用极简表达
+```
+
+生成 5 组标题方案：
+
+```text
+使用 $mai-title --product ~/my-products/WT801.md --count 5 --length medium
 ```
 
 只生成五点描述：
 
 ```text
-使用 $ecommerce-multilingual-copy --product ~/my-products/WT801.md bullets
+使用 $mai-copy --product ~/my-products/WT801.md bullets --length medium
 ```
 
-根据图片需求生成单图文案：
+生成 Amazon A+ 文案：
 
 ```text
-使用 $new-requirement 创建 wt801-image2 到 ~/tasks/，类型 image-copy
-使用 $ecommerce-multilingual-copy --product ~/my-products/WT801.md --requirement ~/tasks/wt801-image2.md
+使用 $mai-copy --product ~/my-products/WT801.md a-plus --length full
+```
+
+创建图片文案需求文件：
+
+```text
+使用 $mai-brief 创建 wt801-image2 到 ~/tasks/，类型 image-copy
+```
+
+根据需求文件生成：
+
+```text
+使用 $mai-rich --product ~/my-products/WT801.md --requirement ~/tasks/wt801-image2.md
 ```
 
 指定语言：
 
 ```text
-使用 $ecommerce-multilingual-copy --product ~/my-products/WT801.md --languages CN,EN,DE,ES
+使用 $mai-copy --product ~/my-products/WT801.md --languages CN,EN,DE,ES
 ```
 
-## 它会输出什么
+## 适合普通文员/设计师的建议
 
-- 最终多语言文案表
-- 德语/西语回译核对表
-- 简短执行摘要
-- 修改记录
-- 自动保存的 Markdown 结果文件
+你可以直接这样说：
 
-## 文案类型
+```text
+使用 $mai-rich，根据这张图给我写亚马逊副图文案。
+目标用户是家庭园艺用户。
+英文主标题不超过 4 个词，副标题不超过 6 个词，标签最多 3 个。
+长度用极简表达。
+语言要中文、英文、德语、西语。
+```
 
-| 类型 | 适合做什么 |
-| --- | --- |
-| `full-listing` | 标题、副标题、五点、短描述 |
-| `title` | 标题和副标题 |
-| `bullets` | 五条卖点 |
-| `a-plus` | Amazon A+ 模块 |
-| `tagline` | 短标语 |
-| `image-copy` | 主图或详情图文案 |
-
-## 参数说明
-
-| 参数 | 必须 | 含义 |
-| --- | --- | --- |
-| `--product <path>` | 是 | 产品资料文件 |
-| `--requirement <path>` | 否 | 文案需求文件 |
-| `copy-type` | 否 | `full-listing`、`title`、`bullets`、`a-plus`、`tagline`、`image-copy` |
-| `--languages XX,XX` | 否 | 默认 `CN,EN,DE,ES` |
-| `--platform` | 否 | 默认 `amazon`，也支持 `aliexpress` |
+Mai 应该先确认理解，再给你结果和统计。你确认之后，它再保存文档。
 
 ## 开发命令
 
 ```bash
-bun install
 bun run validate
-bun test
+bun run test
 bun run lint
 ```
 
-常用脚本：
+## 旧入口说明
 
-- `bun run install:codex`：安装到 `$CODEX_HOME/skills` 或 `~/.codex/skills`。
-- `bun run validate`：检查 Claude Code 插件和 Codex skill 结构。
-- `bun run bin/save-result.ts --help`：查看结果保存工具。
-
-## 许可证
-
-MIT
+旧的长入口 `ecommerce-multilingual-copy` 文件仍保留在仓库中作兼容参考，但推荐新用户使用 `mai` 系列短入口。

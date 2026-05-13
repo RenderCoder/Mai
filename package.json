@@ -1,12 +1,12 @@
 {
-  "name": "ecommerce-multilingual-copy",
+  "name": "mai",
   "version": "1.0.0",
-  "description": "Codex and Claude Code skills for multilingual e-commerce copywriting with a 4-step reflective translation pipeline",
+  "description": "Short-name Codex and Claude Code skills for confirmed multilingual e-commerce copywriting",
   "type": "module",
   "scripts": {
     "dev": "claude --plugin-dir .",
     "install:codex": "bun run scripts/install-codex-skill.ts",
-    "test": "bun test",
+    "test": "bun test scripts/install-codex-skill.test.ts skills/mai/scripts/save-result.test.ts",
     "lint": "bunx biome check .",
     "lint:fix": "bunx biome check --write .",
     "format": "bunx biome format --write .",

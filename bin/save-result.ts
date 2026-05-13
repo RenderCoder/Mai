@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 
-import { runCli } from "../skills/ecommerce-multilingual-copy/scripts/save-result";
+import { runCli } from "../skills/mai/scripts/save-result";
 
 runCli().then(
   (code) => process.exit(code),

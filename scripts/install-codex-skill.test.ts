@@ -31,6 +31,11 @@ async function createFixture(): Promise<string> {
   return root;
 }
 
+async function readRealManifestSkills(): Promise<string[]> {
+  const manifest = await Bun.file(".claude-plugin/plugin.json").json();
+  return manifest.skills as string[];
+}
+
 describe("createInstallPlan", () => {
   test("plans each manifest skill under CODEX_HOME/skills", async () => {
     const sourceRoot = await createFixture();
@@ -61,6 +66,25 @@ describe("createInstallPlan", () => {
     expect(forcePlan.items.find((item) => item.skill === "alpha")?.action).toBe(
       "overwrite",
     );
+  });
+
+  test("real manifest installs the short Mai entries", async () => {
+    const codexHome = await tempDir();
+    const plan = await createInstallPlan({ codexHome });
+    const manifestSkills = await readRealManifestSkills();
+
+    expect(plan.items.map((item) => item.skill)).toEqual(manifestSkills);
+    expect(manifestSkills).toEqual([
+      "mai",
+      "mai-title",
+      "mai-copy",
+      "mai-rich",
+      "mai-product",
+      "mai-brief",
+    ]);
+    expect(manifestSkills).not.toContain("ecommerce-multilingual-copy");
+    expect(manifestSkills).not.toContain("new-product");
+    expect(manifestSkills).not.toContain("new-requirement");
   });
 });
 
