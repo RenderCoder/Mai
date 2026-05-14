@@ -3,15 +3,17 @@
 ## Unreleased
 
 ### Added
+- Single user-facing `$mai` install and usage path; title, listing, rich image copy, templates, version checks, and update guidance are now covered by the main skill
+- Version checks now compare the installed skill with the latest GitHub `VERSION` and tell users to exit Codex before running the shell updater when an update is available
 - Skill version files and a `check-version.ts` helper for installed-version checks
 - macOS-friendly version checker: `sh ~/.codex/skills/mai/scripts/check-version.sh`
-- Short Mai skill family: `mai`, `mai-title`, `mai-copy`, `mai-rich`, `mai-product`, `mai-brief`
+- Historical Mai shortcut skill files remain for compatibility, but new users are guided to `$mai` only
 - Length presets for copy generation: `minimal`, `medium`, `full`
 - Guided parameter confirmation with one numbered question at a time
 - Codex skill support with `agents/openai.yaml` metadata for all skills
 - One-command Codex installer: `bun run install:codex`
 - macOS-friendly installed-skill updater: `sh ~/.codex/skills/mai/scripts/update-installed.sh`
-- GitHub `$skill-installer` installation guidance for all Mai entries
+- GitHub `$skill-installer` installation guidance for the main `$mai` skill
 - Skill-local result save helper so Codex installs keep save support
 - Beginner-focused setup guides in English and Chinese
 - Automated tests for Codex install planning and result path generation
@@ -21,12 +23,14 @@
 - Detailed Simplified Chinese user manual at `docs/user-manual.zh-CN.md`
 
 ### Changed
+- Plugin manifest now installs only the main `mai` skill for normal Codex setup
+- User docs now prioritize shell-only version/update commands and avoid requiring Bun, Python, npm, or a developer environment
 - Copy generation now uses a five-step double-reflection flow: draft, first reflection, revised version, second reflection, final version
 - Layout-sensitive multilingual copy now requires longest-word checks and short-word alternatives for languages such as German
 - Copy output now always includes Simplified Chinese first as the internal review baseline, even when users request only other target languages
 - Ambiguous key requirements now block generation and trigger one-at-a-time confirmation
 - Chat previews now avoid Markdown tables; saved documents may still use tables
-- New users are guided to short Mai entries instead of the old long `ecommerce-multilingual-copy` entry
+- New users are guided to the single `$mai` entry instead of the old long `ecommerce-multilingual-copy` entry or historical shortcut entries
 - Docs now explain that Mai means “卖” / selling-copy AI
 - Copy generation now shows results, understanding, language choices, count statistics, and risks in chat before saving
 - Skill prompts now support both Claude Code slash commands and Codex `$skill` invocation

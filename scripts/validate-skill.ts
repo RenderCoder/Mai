@@ -196,6 +196,11 @@ if (!existsSync(workflowPath)) {
   } else {
     pass("workflow marker: 长单词排版硬约束");
   }
+  if (!workflow.includes("版本检查与更新引导")) {
+    fail("skills/mai/references/workflow.md: missing 版本检查与更新引导");
+  } else {
+    pass("workflow marker: 版本检查与更新引导");
+  }
 }
 
 // 4. Check example files
@@ -245,6 +250,31 @@ for (const file of projectFiles) {
     warn(`${file} not found`);
   } else {
     pass(file);
+  }
+}
+
+// 7. Check user-facing docs keep the single-entry path.
+console.log("\n7. User-facing single-entry guidance");
+const userFacingFiles = [
+  "README.md",
+  "README.zh-CN.md",
+  "docs/user-manual.zh-CN.md",
+  "skills/mai/SKILL.md",
+];
+const legacyEntryPattern =
+  /\$(mai-title|mai-copy|mai-rich|mai-product|mai-brief)|\/(mai-title|mai-copy|mai-rich|mai-product|mai-brief)|tree\/main\/skills\/(mai-title|mai-copy|mai-rich|mai-product|mai-brief)/;
+for (const file of userFacingFiles) {
+  const path = join(ROOT, file);
+  if (!existsSync(path)) {
+    fail(`${file} not found for single-entry check`);
+    continue;
+  }
+
+  const content = await Bun.file(path).text();
+  if (legacyEntryPattern.test(content)) {
+    fail(`${file}: contains user-facing legacy Mai subskill entry`);
+  } else {
+    pass(`${file}: uses only $mai as the user-facing entry`);
   }
 }
 

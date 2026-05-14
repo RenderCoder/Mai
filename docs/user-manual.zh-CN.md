@@ -1,40 +1,77 @@
 # Mai 电商文案中文使用手册
 
-这份手册给普通用户使用。你不需要懂命令行，也不需要记很多参数。只要记住：把一个产品的资料放进同一个文件夹，然后告诉 Mai 你要标题、Listing、五点、A+、图片文案还是需求模板。
+这份手册给普通文员、设计师和运营使用。你不需要懂命令行，也不需要记很多参数。
+
+只要记住一个入口：
+
+```text
+使用 $mai
+```
 
 Mai 默认用简体中文和你沟通。它会先在对话里给你看理解、文案、统计和风险；你确认“可以 / 保存 / 写入”之后，它才会把结果保存成 Markdown 文档。
 
 ## 1. Mai 能做什么
 
-Mai 是一个给 Codex 和 Claude Code 使用的电商文案技能。它适合：
-
-- 给 Amazon / AliExpress 产品写标题、副标题。
+- 写 Amazon / AliExpress 标题、副标题。
 - 写完整 Listing、五点描述、A+ 模块、标语。
 - 根据图片、草图、Figma 截图、详情页版位写图文案。
-- 把中文卖点转成自然的英文、德语、西班牙语文案。
-- 检查字数、词数、行数、二维版式风险。
+- 把中文卖点转成自然的英文、德语、西班牙语等文案。
+- 检查字数、词数、行数、长单词和二维版式风险。
 - 检查合规风险，避免夸大、绝对化、没有依据的宣传。
-- 把最终结果保存成带上下文的 Markdown 文档。
+- 创建产品资料文件夹模板和文案需求模板。
+- 检查当前 Mai 版本，并提示如何更新。
 
-Mai 的默认输出语言是：
+## 2. 安装
+
+在 Codex 里输入：
 
 ```text
-中文、英文、德语、西班牙语
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
 ```
 
-你也可以指定英文、德语、法语等其它语言。但为了方便中文团队审核，Mai 永远会把简体中文文案放在第一位；例如你说“只要英文”，实际会先给中文审核版，再给英文版。
+安装后重启 Codex，然后输入：
 
-## 2. 最短上手流程
+```text
+使用 $mai
+```
+
+只安装 `$mai` 就够了。不要再安装其它复杂入口。
+
+## 3. 检查版本和更新
+
+在 Codex 里输入：
+
+```text
+使用 $mai 检查版本
+```
+
+Mai 会优先运行：
+
+```bash
+sh ~/.codex/skills/mai/scripts/check-version.sh
+```
+
+如果显示当前不是最新版，先退出 Codex，再在系统终端运行：
+
+```bash
+sh ~/.codex/skills/mai/scripts/update-installed.sh
+```
+
+更新后重启 Codex，再检查一次版本。
+
+这个流程不需要安装 Bun、Python、npm 或其它开发环境。
+
+## 4. 最短上手流程
 
 ### 第一步：创建产品资料文件夹
 
 在 Codex 里输入：
 
 ```text
-使用 $mai-product 创建 WT801 到 ~/my-products/
+使用 $mai 创建 WT801 产品资料到 ~/my-products/
 ```
 
-Mai 会创建：
+Mai 会创建类似这样的文件夹：
 
 ```text
 ~/my-products/WT801/
@@ -58,56 +95,42 @@ Mai 会创建：
 └── old-listing.md
 ```
 
-Mai 会递归读取这个文件夹里的文本资料。支持：
+Mai 会递归读取这个文件夹里的文本资料。适合放进去的文件包括：
 
-```text
-.md, .txt, .csv, .json, .yaml, .yml
-```
+- `.md`
+- `.txt`
+- `.csv`
+- `.json`
+- `.yaml`
+- `.yml`
 
-不建议放进这个文件夹作为资料源的内容：
-
-- 图片、视频、压缩包等二进制文件。
-- 与产品无关的文档。
-- 过期且容易误导的资料，除非你明确标注“旧版 / 不再使用”。
+不建议把图片、视频、压缩包或无关文档放进产品资料文件夹。
 
 ### 第三步：生成文案
 
 生成标题：
 
 ```text
-使用 $mai-title --product ~/my-products/WT801/
+使用 $mai --product ~/my-products/WT801/ 生成 5 组 Amazon 标题。
 ```
 
 生成完整 Listing：
 
 ```text
-使用 $mai-copy --product ~/my-products/WT801/ full-listing
+使用 $mai --product ~/my-products/WT801/ 生成完整 Listing，语言要中文、英文、德语、西语。
 ```
 
 根据图片或草图生成副图文案：
 
 ```text
-使用 $mai-rich --product ~/my-products/WT801/
-根据这张草图写 Amazon 副图文案，英文主标题不超过 4 个词，副标题不超过 6 个词。
+使用 $mai --product ~/my-products/WT801/ 根据这张草图写 Amazon 副图文案。
+英文主标题不超过 4 个词，副标题不超过 6 个词，标签最多 3 个。
+长度用极简表达。
 ```
 
 ### 第四步：确认后保存
 
-Mai 会先展示：
-
-- 理解确认
-- 当前假设
-- 第一步：初步版本
-- 第二步：第一次反思自查与优化建议
-- 第三步：修正版
-- 第四步：第二次反思与最终调整建议
-- 第五步：最终版本
-- 文案预览
-- 数量统计
-- 合规与风险检查
-- 待确认事项
-
-你确认后输入：
+Mai 会先展示结果。你确认后输入：
 
 ```text
 可以，保存
@@ -115,325 +138,9 @@ Mai 会先展示：
 
 Mai 才会写入 Markdown 结果文档。
 
-## 3. 安装方式
+## 5. 不知道怎么说时
 
-### 方式一：从 GitHub 安装
-
-推荐先安装主入口体验：
-
-```text
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
-```
-
-安装后重启 Codex，然后输入：
-
-```text
-使用 $mai
-```
-
-只安装 `$mai` 已经可以完成大部分工作，包括标题、Listing、五点、A+、图片文案、多语言输出和确认后保存。
-
-检查当前安装的版本：
-
-```bash
-sh ~/.codex/skills/mai/scripts/check-version.sh
-```
-
-如果版本是 `1.1.2`，并且 `Double-reflection workflow`、`CLI-friendly preview`、`Chinese-first copy`、`Short-word layout` 都是 `yes`，说明你安装的是包含“双反思流程”“命令行友好预览”“中文优先文案”和“长单词排版控制”的版本。
-
-如果你以前安装过旧版，`$skill-installer` 看到 `~/.codex/skills/mai` 已存在时会停止，不会自动覆盖。
-
-已经装过新版 `$mai` 的用户，可以直接运行自带更新脚本：
-
-```bash
-sh ~/.codex/skills/mai/scripts/update-installed.sh
-```
-
-更新前想先看看会覆盖哪些入口，可以运行：
-
-```bash
-sh ~/.codex/skills/mai/scripts/update-installed.sh --dry-run
-```
-
-这个脚本不需要安装 Bun 或 Python。它会从 GitHub 拉取最新版，默认只更新你已经安装过的 Mai 入口，并把旧目录备份到：
-
-```text
-~/.codex/skills/.mai-update-backups/
-```
-
-如果你想一次安装或更新所有 Mai 入口：
-
-```bash
-sh ~/.codex/skills/mai/scripts/update-installed.sh --all
-```
-
-更新后重启 Codex，再检查版本。
-
-如果你的旧版 Mai 里还没有 `update-installed.sh`，可以直接下载最新版更新脚本到临时目录运行：
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/RenderCoder/Mai/main/skills/mai/scripts/update-installed.sh -o /tmp/mai-update-installed.sh && sh /tmp/mai-update-installed.sh
-```
-
-如果你用熟了，想让入口更明确，再按需安装：
-
-```text
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
-```
-
-注意：请先安装 `mai`，再安装其它 `mai-*` 子入口。`mai-title`、`mai-copy` 和 `mai-rich` 会读取 `mai` 里的共享工作流规则。
-
-### 方式二：开发者本地安装
-
-普通用户不需要这一步。只有你要开发或维护这个项目时，才需要在项目目录运行：
-
-```bash
-bun install
-bun run install:codex
-```
-
-如果你之前已经安装过，想用最新版本覆盖：
-
-```bash
-bun run install:codex -- --force
-```
-
-安装后重启 Codex。
-
-## 4. 六个入口怎么选
-
-| 入口 | 什么时候用 | 示例 |
-| --- | --- | --- |
-| `$mai` | 不确定用哪个入口时 | `使用 $mai 帮我给这个产品写文案` |
-| `$mai-title` | 标题、副标题、标题 A/B 测试 | `使用 $mai-title --product ~/my-products/WT801/` |
-| `$mai-copy` | Listing、五点、A+、标语、常规图文案 | `使用 $mai-copy --product ~/my-products/WT801/ bullets` |
-| `$mai-rich` | 图片、草图、Figma、复杂 brief、多文件上下文 | `使用 $mai-rich --product ~/my-products/WT801/ 根据这张图写副图文案` |
-| `$mai-product` | 创建产品资料文件夹 | `使用 $mai-product 创建 WT801 到 ~/my-products/` |
-| `$mai-brief` | 创建文案需求模板 | `使用 $mai-brief 创建 wt801-image2 到 ~/tasks/，类型 image-copy` |
-
-如果你不确定，就用：
-
-```text
-使用 $mai
-```
-
-Mai 会根据你的描述判断要走标题、常规文案还是复杂图文案流程。
-
-## 5. 产品资料文件夹怎么写
-
-### 推荐目录结构
-
-```text
-~/my-products/WT801/
-├── product.md
-├── specs.md
-├── selling-points.md
-├── seo-keywords.csv
-├── compliance.md
-├── competitors.md
-├── image-brief.md
-└── old-listing.md
-```
-
-### `product.md` 建议包含什么
-
-```markdown
-# WT801 - 产品资料
-
-## 基础信息
-
-| 字段 | 值 |
-| --- | --- |
-| 品牌 |  |
-| 型号 | WT801 |
-| 品类 |  |
-| 目标市场 |  |
-| 平台 | Amazon |
-
-## 核心技术规格
-
-| 规格 | 值 |
-| --- | --- |
-| 电源 |  |
-| 连接方式 |  |
-| 防护等级 |  |
-| 尺寸 |  |
-| 重量 |  |
-
-## 目标用户
-
--
-
-## 关键卖点（按优先级）
-
-1.
-2.
-3.
-4.
-5.
-
-## SEO 关键词
-
-### English
-- Primary:
-- Secondary:
-
-### Deutsch
-- Primary:
-- Secondary:
-
-### Espanol
-- Primary:
-- Secondary:
-
-## 合规规则
-
--
-
-## 禁止声明
-
--
-```
-
-### 多文件资料怎么组织
-
-你可以按内容拆分：
-
-```text
-specs.md              放规格参数
-faq.md                放用户常见问题
-seo-keywords.csv      放关键词
-competitors.md        放竞品对比
-image-brief.md        放图片文案需求
-old-listing.md        放旧版 Listing
-compliance.md         放禁止词、认证依据、声明限制
-```
-
-Mai 会把它们合并成同一个产品上下文，并保留来源标题，例如：
-
-```markdown
-## source: specs.md
-...
-
-## source: seo-keywords.csv
-...
-```
-
-这样你后续能知道某个事实来自哪个文件。
-
-### 如果资料有冲突怎么办
-
-例如：
-
-- `specs.md` 说防护等级是 `IP65`
-- `old-listing.md` 说产品是 `waterproof`
-
-Mai 应该在“当前假设”或“待确认事项”里指出冲突，并使用更保守的表达，例如 `IP65 water-resistant`，而不是直接写 `waterproof`。
-
-## 6. 常用任务示例
-
-### 生成标题
-
-```text
-使用 $mai-title --product ~/my-products/WT801/
-```
-
-生成 5 组标题：
-
-```text
-使用 $mai-title --product ~/my-products/WT801/ --count 5
-```
-
-标题更短，适合图片主标题：
-
-```text
-使用 $mai-title --product ~/my-products/WT801/ --length minimal
-用途是 Amazon 主图标题，英文不超过 4 个词。
-```
-
-偏 SEO 的 Listing 标题：
-
-```text
-使用 $mai-title --product ~/my-products/WT801/ --length full
-用途是 Amazon Listing 标题，需要覆盖主要英文关键词。
-```
-
-### 生成五点描述
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ bullets --length medium
-```
-
-英文五点：
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ bullets --languages EN
-```
-
-注意：即使这里写 `--languages EN`，Mai 也会先输出简体中文审核版，再输出英文版。
-
-### 生成完整 Listing
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ full-listing --length full
-```
-
-指定语言：
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ full-listing --languages CN,EN,DE,ES
-```
-
-### 生成 A+ 文案
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ a-plus --length full
-```
-
-补充模块要求：
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ a-plus
-需要 1 个横幅模块、4 个特性模块、1 个对比模块。
-整体语气专业、现代，不要太夸张。
-```
-
-### 生成标语
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ tagline --count 5 --length minimal
-```
-
-### 根据图片或草图生成文案
-
-```text
-使用 $mai-rich --product ~/my-products/WT801/
-根据这张草图写 Amazon 副图文案。
-画面是一个智能浇水定时器连接两条水管，左边浇花坛，右边浇草坪。
-英文主标题不超过 4 个词，副标题不超过 6 个词，最多 3 个标签。
-```
-
-### 根据需求文件生成文案
-
-先创建需求文件：
-
-```text
-使用 $mai-brief 创建 wt801-image2 到 ~/tasks/，类型 image-copy
-```
-
-填好 `~/tasks/wt801-image2.md` 后：
-
-```text
-使用 $mai-rich --product ~/my-products/WT801/ --requirement ~/tasks/wt801-image2.md
-```
-
-### 不想写参数时
-
-你可以直接说：
+你可以直接自然语言描述：
 
 ```text
 使用 $mai 帮我给 WT801 写一套 Amazon 英文五点。
@@ -441,59 +148,7 @@ Mai 应该在“当前假设”或“待确认事项”里指出冲突，并使�
 语气要专业、简洁，避免夸张。
 ```
 
-Mai 会自己判断任务类型，并在缺少关键信息时一次问一个问题。
-
-## 7. 长度档位怎么选
-
-| 参数 | 中文说法 | 适合场景 |
-| --- | --- | --- |
-| `--length minimal` | 极简表达 | 主图、按钮、标签、包装、小版位 |
-| `--length medium` | 中等 | 副图、详情页模块、常规标题、五点 |
-| `--length full` | 完整 | Listing、A+、SEO 覆盖更完整的内容 |
-
-示例：
-
-```text
-使用 $mai-rich --product ~/my-products/WT801/ --length minimal
-```
-
-也可以直接说：
-
-```text
-长度用极简表达，适合图片上排版。
-```
-
-## 8. 语言怎么指定
-
-默认：
-
-```text
-CN,EN,DE,ES
-```
-
-英文：
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ bullets --languages EN
-```
-
-中文 + 英文：
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ bullets --languages CN,EN
-```
-
-自定义语言：
-
-```text
-使用 $mai-title --product ~/my-products/WT801/ --languages EN,FR,IT
-```
-
-注意：Mai 默认用简体中文和你解释、提问、审查；文案输出也永远中文优先。`--languages EN,FR,IT` 的实际输出顺序是：简体中文、英语、法语、意大利语。
-
-## 9. Mai 会怎么提问
-
-如果信息不完整，Mai 不会一次问很多问题。它会一次问一个选择题，例如：
+Mai 会自己判断任务类型。如果缺少关键信息，它会一次只问一个问题：
 
 ```text
 我需要先确认一个选项：你要生成哪类文案？
@@ -512,107 +167,122 @@ CN,EN,DE,ES
 2
 ```
 
-如果下一步还缺平台，它会继续问平台；如果缺语言，它再问语言。
+## 6. Mai 会输出什么
 
-## 10. Mai 会输出什么
+保存之前，Mai 应该先给你看：
 
-在保存之前，Mai 应该先给你看：
+- 理解确认。
+- 当前假设。
+- 第一步：初步版本。
+- 第二步：第一次反思自查与优化建议。
+- 第三步：修正版。
+- 第四步：第二次反思与最终调整建议。
+- 第五步：最终版本。
+- 数量统计。
+- 合规与风险检查。
+- 待确认事项。
 
-```text
-## 理解确认
-- 产品资料来源：读取了 product.md、specs.md、seo-keywords.csv
-- 目标平台：Amazon
-- 文案类型：副图文案
-- 目标用户：家庭园艺用户
-- 核心卖点：双区控制、无需 Hub、远程 App、精准浇水
+对话里会尽量避免 Markdown 表格，因为表格原始语法在命令行里不容易读。你确认后，保存下来的 Markdown 文档可以使用表格，方便复制、对照和交给设计同事。
 
-## 当前假设
-- 未提供图片尺寸，默认副图常规横版版位。
-- 英文主标题按 4 个词以内控制。
-- 德语和西语通常更长，需要优先压缩标签文案。
+## 7. 中文优先
 
-## 第一步：初步版本
+Mai 面向中文团队。无论你要求什么语言，最终文案都会先输出简体中文审核版，再输出其它语言。
 
-方案 1：推荐
-- 位置：主标题
-  - 中文：远程安心浇水
-  - 英语：Water From Anywhere
-  - 德语：...
-  - 西班牙语：...
-
-- 位置：副标题
-  - 中文：用 app 查看花园浇水状态
-  - 英语：Check watering status from the app
-  - 德语：...
-  - 西班牙语：...
-
-## 第二步：第一次反思自查与优化建议
-
-- 英文主标题较短，适合图片版位。
-- 德语和西语会更长，标签文案需要继续压缩。
-- 德语需要避免长复合词撑破版式，优先短词或可自然换行的表达。
-- 不写 best、guaranteed、always 等不可验证承诺。
-- 如果强调覆盖范围，必须说明“室内范围受户型影响”。
-
-## 第三步：修正版
-
-- 位置：主标题
-  - 中文：随时查看家中气候
-  - 英语：Check Home Climate Anytime
-  - 德语：Raumklima jederzeit prüfen
-  - 西班牙语：Consulta el clima del hogar
-
-- 位置：副标题
-  - 中文：用 app 查看温湿度变化
-  - 英语：View temperature and humidity changes in the app
-  - 德语：Temperatur und Luftfeuchtigkeit per App im Blick
-  - 西班牙语：Consulta cambios de temperatura y humedad en la app
-
-## 第四步：第二次反思与最终调整建议
-
-- 中文“家中气候”略抽象，建议回到更具体的“温湿度”。
-- 英语标题较自然，但 Anytime 可省略，让主标题更短。
-- 德语没有超长复合词，最长单词可控；保留短词组合更适合图片版式。
-
-## 第五步：最终版本
-
-- 位置：主标题
-  - 中文：查看花园浇水状态
-  - 英语：Check Watering Status
-  - 德语：Bewässerung per App prüfen
-  - 西班牙语：Consulta el riego en la app
-
-## 数量统计
-
-- 主标题 / 英语
-  - 字符数：19
-  - 词数：3
-  - 最长单词：Watering（8 个字母）
-  - 行数建议：1 行
-  - 是否超限：否
-
-- 副标题 / 英语
-  - 字符数：34
-  - 词数：6
-  - 行数建议：1-2 行
-  - 是否超限：否
-
-## 合规与风险检查
-- 不使用 all-weather、year-round、freeze-proof。
-- Wi-Fi 6、2.4GHz、No Hub Required 来自产品资料。
-
-## 待确认事项
-- 是否更偏“远程安心”还是“无需网关省钱”？
-- 确认后我再写入 Markdown 文档。
-```
-
-注意：Mai 在对话里会尽量避免 Markdown 表格，因为表格在命令行里不容易读。你确认后，保存下来的 Markdown 文档可以使用表格，方便复制、对照和交给设计同事。
-
-你满意后再说：
+例如你说：
 
 ```text
-没问题，保存
+使用 $mai --product ~/my-products/WT801/ 生成英文和德语标题。
 ```
+
+实际输出顺序是：
+
+```text
+简体中文 -> 英语 -> 德语
+```
+
+这样同事可以先用母语检查卖点和表达是否正确。
+
+## 8. 长度怎么选
+
+可以直接用中文说：
+
+- 极简表达：主图、标签、按钮、小版位。
+- 中等：副图、详情页模块、常规标题、五点。
+- 完整：Listing、A+、SEO 覆盖更完整的内容。
+
+示例：
+
+```text
+使用 $mai --product ~/my-products/WT801/ 写图片文案，长度用极简表达。
+```
+
+## 9. 常用任务示例
+
+### 标题
+
+```text
+使用 $mai --product ~/my-products/WT801/ 生成 5 组标题，长度用中等。
+平台是 Amazon。
+标题要自然，不要关键词堆砌。
+```
+
+### 五点
+
+```text
+使用 $mai --product ~/my-products/WT801/ 生成五点描述。
+语言要中文、英文、德语、西语。
+重点卖点顺序：精准浇水、双区控制、无需 Hub、太阳能供电、耐用接口。
+```
+
+### 完整 Listing
+
+```text
+使用 $mai --product ~/my-products/WT801/ 生成完整 Listing。
+长度用完整。
+语气专业、清晰，不要夸张。
+```
+
+### A+ 文案
+
+```text
+使用 $mai --product ~/my-products/WT801/ 生成 Amazon A+ 文案。
+需要 1 个横幅模块、4 个特性模块、1 个对比模块。
+语言要中文、英文、德语、西语。
+```
+
+### 图片文案
+
+```text
+使用 $mai --product ~/my-products/WT801/ 根据这张草图写 Amazon 副图文案。
+画面：产品连接两条水管，左边浇花坛，右边浇草坪。
+目标用户：家庭园艺用户。
+英文主标题不超过 4 个词，副标题不超过 6 个词，标签最多 3 个。
+先给我看文案和字符统计，不要直接写文档。
+```
+
+### 创建需求文件
+
+```text
+使用 $mai 创建图片文案需求文件 wt801-image2 到 ~/tasks/。
+```
+
+填好需求文件后：
+
+```text
+使用 $mai --product ~/my-products/WT801/ 根据 ~/tasks/wt801-image2.md 生成图片文案。
+```
+
+## 10. 长单词和排版
+
+很多语言会比中文更长。德语尤其容易出现很长的复合词。Mai 在生成图片、包装、A+、详情页模块、按钮、标签等文案时，必须主动检查：
+
+- 字符数。
+- 词数。
+- 行数建议。
+- 最长单词或最长连续字符段。
+- 是否可能撑破二维版式。
+
+如果德语或其它语言太长，Mai 应该优先改成短词、短语或可自然换行的表达。
 
 ## 11. 保存规则
 
@@ -621,31 +291,9 @@ Mai 不会一开始就写文件。它会等你确认。
 保存路径优先级：
 
 1. 如果你明确说“保存到某个文件”，就保存到你指定的文件。
-2. 如果使用了 `--requirement`，保存到需求文件同目录。
-3. 如果只使用了 `--product` 文件夹，保存到产品文件夹内。
+2. 如果使用了需求文件，保存到需求文件同目录。
+3. 如果只使用了产品资料文件夹，保存到产品文件夹内。
 4. 如果无法判断保存位置，Mai 会问你保存到哪里。
-
-例子：
-
-```text
-产品资料：~/my-products/WT801/
-文案类型：title
-日期：2026-05-13
-```
-
-结果可能保存为：
-
-```text
-~/my-products/WT801/WT801_title_result_20260513.md
-```
-
-如果同名文件已存在，会自动追加时间：
-
-```text
-WT801_title_result_20260513_1430.md
-```
-
-## 12. 结果文档里有什么
 
 保存后的 Markdown 文档应包含：
 
@@ -654,87 +302,23 @@ WT801_title_result_20260513_1430.md
 - 原始需求摘要。
 - 场景理解。
 - 关键决策。
+- 双反思过程。
 - 最终文案表。
 - 数量统计表。
 - 合规与风险检查。
 - 需要人工复核的事项。
 
-这样做的好处是：以后你或同事打开结果文件，不只看到文案，还能看到它是基于什么资料、什么限制、什么判断生成的。
+## 12. 常见问题
 
-## 13. 给不同角色的建议
+### 我必须写参数吗？
 
-### 运营
-
-常用：
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ full-listing --length full
-```
-
-建议你在产品资料文件夹里放：
-
-- 关键词表。
-- 竞品对比。
-- 旧 Listing。
-- 平台限制。
-- 禁止声明。
-
-### 设计师
-
-常用：
-
-```text
-使用 $mai-rich --product ~/my-products/WT801/
-根据这张版式图写副图文案，文字要短，适合放在图片上。
-```
-
-建议你说明：
-
-- 图片用途：主图、副图、详情页、A+、包装。
-- 文案放在哪里。
-- 每块文字最多几行。
-- 英文标题最多几个词。
-- 标签最多几个。
-
-### 文员
-
-常用：
-
-```text
-使用 $mai-product 创建 WT801 到 ~/my-products/
-```
-
-然后把资料复制到 `product.md`，如果不知道怎么填，先填你知道的内容。Mai 会根据缺失信息继续问你。
-
-## 14. 常见问题
-
-### 我必须用参数吗？
-
-不必须。你可以直接用自然语言：
-
-```text
-使用 $mai 帮我写 WT801 的 Amazon 五点，产品资料在 ~/my-products/WT801/。
-```
+不必须。你可以直接自然语言描述。
 
 ### 产品资料必须只有一个文件吗？
 
 不需要。推荐一个产品一个文件夹，里面可以放多个文件。Mai 会递归读取。
 
-### 我可以继续用单个 `.md` 产品文件吗？
-
-可以。单个 Markdown 文件保留兼容。但推荐使用文件夹，因为更适合导入多份产品资料。
-
-### Mai 会直接帮我保存文件吗？
-
-生成文案时不会直接保存。它会先展示结果，你确认后才保存。
-
-创建模板时，例如 `$mai-product` 和 `$mai-brief`，会直接创建模板文件；如果目标文件已存在，它不应该直接覆盖。
-
-### 为什么它一直问我问题？
-
-Mai 只会在缺少关键参数时问，例如不知道平台、语言、文案类型、产品资料、版式限制。你可以在一开始说得更完整，减少追问。
-
-### 我上传图片后还需要写描述吗？
+### 上传图片后还需要写描述吗？
 
 建议写。图片和草图的文案质量很依赖版位信息。你可以补充：
 
@@ -742,82 +326,25 @@ Mai 只会在缺少关键参数时问，例如不知道平台、语言、文案�
 这是 Amazon 第二张副图，横版。左边是产品，右边放标题和 3 个标签。英文主标题不超过 4 个词。
 ```
 
-### 德语和西语太长怎么办？
-
-Mai 会提示字符膨胀、最长单词和排版风险，并给出更短版本或断行建议。图片文案建议优先用 `--length minimal`。德语等语言会优先使用短词或可自然换行的表达，避免长复合词撑破版式。
-
 ### 合规检查能完全替代人工审核吗？
 
 不能。Mai 会做风险提示，但最终上线前仍建议人工复核，尤其是认证、测试数据、医疗/健康、安全、极限词、平台政策相关内容。
 
-### 结果文件会不会被下次当成产品资料读取？
+## 13. 给团队用户的最短说明
 
-不会。产品资料文件夹读取时会忽略类似 `*_result_*.md` 的已生成结果文件。
-
-## 15. 推荐提示词模板
-
-### 标题模板
+可以直接把下面这段发给同事：
 
 ```text
-使用 $mai-title --product ~/my-products/WT801/ --count 5 --length medium
-平台是 Amazon。
-标题要自然，不要关键词堆砌。
-英文标题尽量控制在 180 字符以内。
-```
+安装：使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
 
-### 五点模板
+使用：只记住 $mai。
 
-```text
-使用 $mai-copy --product ~/my-products/WT801/ bullets --length medium
-语言要 CN,EN,DE,ES。
-重点卖点顺序：精准浇水、双区控制、无需 Hub、太阳能供电、耐用接口。
-语气专业、清晰，不要夸张。
-```
+把一个产品的资料放进同一个文件夹，然后说：
+使用 $mai --product ~/my-products/产品型号/ 帮我写标题、五点、Listing、A+ 或图片文案。
 
-### A+ 模板
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ a-plus --length full
-需要：
-1 个横幅标题和副标题
-4 个特性模块
-1 个对比模块
-语言要 CN,EN,DE,ES。
-```
-
-### 图片文案模板
-
-```text
-使用 $mai-rich --product ~/my-products/WT801/ --length minimal
-根据这张草图写 Amazon 副图文案。
-画面：产品连接两条水管，左边浇花坛，右边浇草坪。
-目标用户：家庭园艺用户。
-英文主标题不超过 4 个词，副标题不超过 6 个词，标签最多 3 个。
-先给我看文案和字符统计，不要直接写文档。
-```
-
-### 改写旧文案模板
-
-```text
-使用 $mai-copy --product ~/my-products/WT801/ bullets --length medium
-请优化下面这版旧五点，让英文更自然，德语和西语不要像机翻。
-同时检查是否有合规风险。
-
-[粘贴旧文案]
-```
-
-## 16. 发布前给团队用户的说明
-
-如果你要把 Mai 发给团队使用，建议告诉用户三件事：
-
-1. 一个产品一个文件夹，所有资料都放进去。
-2. 用 `$mai-product` 创建产品资料文件夹，用 `$mai-brief` 创建需求文件。
-3. 生成文案时先看结果和风险，确认后再保存。
-
-给团队的最短说明可以是：
-
-```text
-先用 $mai-product 建产品资料文件夹，把产品规格、卖点、关键词、竞品、旧文案都放进去。
-写标题用 $mai-title，写 Listing/五点/A+ 用 $mai-copy，看图写文案用 $mai-rich。
 Mai 会先用中文说明理解、输出多语言文案和统计，确认后才保存结果文件。
+
+检查版本：使用 $mai 检查版本。
+如果不是最新版，退出 Codex 后运行：
+sh ~/.codex/skills/mai/scripts/update-installed.sh
 ```

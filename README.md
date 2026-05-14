@@ -1,114 +1,63 @@
 # Mai Ecommerce Copy
 
-Mai is a short-name ecommerce copywriting skill set for **Codex** and **Claude Code**.
+Mai is a multilingual ecommerce copywriting skill for **Codex** and **Claude Code**.
 
-“Mai” comes from the Chinese pinyin for “sell” (`mai`). Think of it as a small “selling AI” for product copy.
+“Mai” is the Chinese pinyin for “sell”. Regular users only need one entry: `$mai`.
 
-Use the short entries instead of remembering a long command. Users can also describe the task in natural language; when important information is missing, Mai asks one numbered question at a time and the user can reply with a number.
+Mai covers:
 
-| Entry | Use |
-| --- | --- |
-| `$mai` | General entry when you are unsure |
-| `$mai-title` | Titles, subtitles, title A/B options |
-| `$mai-copy` | Listings, bullets, A+, taglines, image copy |
-| `$mai-rich` | Copy from images, sketches, prototypes, or detailed briefs |
-| `$mai-product` | Create a product info folder template |
-| `$mai-brief` | Create a copy brief template |
+- Titles, subtitles, and title A/B options.
+- Listings, bullets, A+, taglines, and image copy.
+- Copy from images, sketches, prototypes, Figma screenshots, and detailed briefs.
+- Product folder templates and copy brief templates.
+- Version checks and shell-based update guidance.
 
 ## Install
 
-### From GitHub with `$skill-installer`
-
-Most users should install the main entry first:
+In Codex, run:
 
 ```text
 Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai
 ```
 
-Restart Codex after installing, then use:
+Restart Codex, then use:
 
 ```text
 Use $mai
 ```
 
-Installing only `$mai` keeps the core capability: titles, listings, bullets, A+, image copy, multilingual output, chat-first review, and confirmed saving.
+Installing `$mai` is enough. Do not ask regular users to install additional Mai entries.
 
-Check the installed version:
+## Check Version
+
+In Codex, you can say:
+
+```text
+Use $mai to check version
+```
+
+Mai should prefer this shell command:
 
 ```bash
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-Expected version: `1.1.2`. The check should also report `Double-reflection workflow: yes`, `CLI-friendly preview: yes`, `Chinese-first copy: yes`, and `Short-word layout: yes`.
+Expected version: `1.1.3`. The check should report:
 
-If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it.
+```text
+Double-reflection workflow: yes
+CLI-friendly preview: yes
+Chinese-first copy: yes
+Short-word layout: yes
+```
 
-If a recent `$mai` is already installed, update in place with Mai's bundled updater:
+If a newer version is available, exit Codex first, then run this in your system terminal:
 
 ```bash
 sh ~/.codex/skills/mai/scripts/update-installed.sh
 ```
 
-To preview what would be overwritten first:
-
-```bash
-sh ~/.codex/skills/mai/scripts/update-installed.sh --dry-run
-```
-
-The updater does not require Bun or Python. It pulls the latest copy from GitHub, updates the Mai entries that are already installed, and backs up old directories under `~/.codex/skills/.mai-update-backups/`. It stages itself in a temporary directory before overwriting installed files, so it can update the `mai` folder it was launched from.
-
-To install or update all Mai entries:
-
-```bash
-sh ~/.codex/skills/mai/scripts/update-installed.sh --all
-```
-
-Restart Codex after updating, then run the version check again.
-
-If your old Mai installation does not have `update-installed.sh`, download the latest updater into `/tmp` and run it:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/RenderCoder/Mai/main/skills/mai/scripts/update-installed.sh -o /tmp/mai-update-installed.sh && sh /tmp/mai-update-installed.sh
-```
-
-Install the optional shortcuts later if you want more explicit entries:
-
-```text
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
-```
-
-Install `mai` before the `mai-*` subskills because the subskills read shared workflow references from `mai`.
-
-### Developer local install
-
-Regular users do not need this. Use it only when developing or maintaining this repository:
-
-```bash
-bun install
-bun run install:codex
-```
-
-Restart Codex after installing.
-
-If Mai is already installed and you want to replace it with this checkout:
-
-```bash
-bun run install:codex -- --force
-```
-
-Claude Code local use:
-
-```bash
-bun run dev
-```
-
-### Distribution note
-
-For local setup and experiments, `$skill-installer` works well. For reusable distribution of the full Mai family, package it as a Codex plugin so the six skill entries can be installed together.
+The updater uses macOS-default shell tools: `sh`, `curl`, `tar`, `cp`, and `mv`. Regular users do not need Bun, Python, npm, or any developer environment.
 
 ## Quick Start
 
@@ -117,156 +66,88 @@ Detailed Chinese user manual: [docs/user-manual.zh-CN.md](docs/user-manual.zh-CN
 Create a product folder:
 
 ```text
-Use $mai-product to create WT801 in ~/my-products/
+Use $mai to create a WT801 product folder in ~/my-products/
 ```
-
-Fill in `~/my-products/WT801/product.md`. You can also drop more product docs into the same folder, such as specs, FAQ, SEO keywords, image briefs, competitor notes, or old listings. Mai reads the folder recursively when you pass it to `--product`.
 
 Generate titles:
 
 ```text
-Use $mai-title --product ~/my-products/WT801/
+Use $mai --product ~/my-products/WT801/ to write 5 Amazon title options.
 ```
 
-Natural-language version:
+Generate a full listing:
 
 ```text
-Use $mai-title to write titles for my new product
+Use $mai --product ~/my-products/WT801/ to write a full listing in Chinese, English, German, and Spanish.
 ```
 
-Mai will ask for missing product info, platform, languages, length, and number of options.
-
-`--product` accepts a product folder or a single Markdown file. Folders are recommended because they let you import all docs for one product into one source directory.
-
-Generate full copy:
+Generate copy from a sketch:
 
 ```text
-Use $mai-copy --product ~/my-products/WT801/
-```
-
-Generate copy from a sketch or image:
-
-```text
-Use $mai-rich --product ~/my-products/WT801/
-Write main-image copy from this sketch. English headline max 4 words, subline max 6 words.
+Use $mai --product ~/my-products/WT801/ to write Amazon secondary-image copy from this sketch.
+English headline max 4 words, subline max 6 words, max 3 labels.
+Use very concise copy.
 ```
 
 ## Delivery Rule
 
 Mai must show the result in chat first. It should include:
 
-If information is missing, it asks one question at a time:
+- Understanding confirmation.
+- Current assumptions.
+- Step 1: draft.
+- Step 2: first reflection and improvement suggestions.
+- Step 3: revised version.
+- Step 4: second reflection and final adjustment suggestions.
+- Step 5: final version.
+- Counts.
+- Compliance and risk checks.
+- Items to confirm.
+
+If important information is missing, Mai asks one numbered question at a time and the user can reply with a number.
+
+Chat previews should avoid Markdown tables because raw table syntax is hard to read in terminals. After the user confirms, Mai can write a Markdown document with tables for copying and comparison.
+
+## Chinese First
+
+Mai is designed for Chinese-speaking teams. Copy output must always put Simplified Chinese first, even if the user only asks for other languages.
+
+For example, `languages EN,DE` actually outputs:
 
 ```text
-Which type of copy do you want?
-1. Title/subtitle
-2. Bullet points
-3. Full listing
-4. A+ content
-5. Image/sketch copy
-Reply with a number.
+Simplified Chinese -> English -> German
 ```
-
-- Scene understanding
-- Output languages
-- Assumptions and missing information
-- First round: draft
-- Second round: reflection and improvement suggestions
-- Third round: final rewrite
-- Copy preview
-- Character, word, and line-count statistics
-- Layout risk
-- Compliance risk
-
-If product context, platform, language, placement, quantity limits, or compliance evidence is unclear, Mai should ask a blocking confirmation question before generating copy.
-
-Only after you confirm should it write the Markdown result document.
-
-The saved document should include the original brief, reasoning context, decisions, final copy, counts, compliance checks, and manual review notes.
-
-## Common Prompts
-
-Typical complete prompt:
-
-```text
-Use $mai-rich --product ~/my-products/WT801/ --length minimal --languages CN,EN,DE,ES
-Write Amazon secondary-image copy from my uploaded sketch.
-The image shows a smart watering timer connected to two hoses: flower bed on the left, lawn on the right.
-Target audience: home gardening users.
-English headline max 4 words, subline max 6 words, max 3 labels.
-Show copy and character counts first. Do not write the document yet.
-```
-
-Mai should first show its understanding, three-round copy flow, character/word/line counts, and layout risk. After you confirm, it writes the Markdown document.
-
-Chinese-first team review rule: Mai always puts Simplified Chinese copy first, even if `--languages` does not include `CN`. For example, `--languages EN,DE` actually outputs Simplified Chinese, English, then German.
-
-Natural-language version:
-
-```text
-Use $mai-rich to write Amazon secondary-image copy from this sketch.
-```
-
-If language, length, platform, or product details are missing, Mai asks for them with numbered options.
 
 ## Length Presets
 
-Use `--length` to choose how concise the copy should be:
+Users can describe length naturally:
 
-| Parameter | Meaning | Best for |
-| --- | --- | --- |
-| `--length minimal` | Very concise | Main images, labels, buttons, tight layouts |
-| `--length medium` | Balanced | Secondary images, detail modules, normal titles |
-| `--length full` | Complete | Listings, A+, SEO-rich copy |
+- Very concise: main images, labels, buttons, tight layouts.
+- Medium: secondary images, detail modules, normal titles, bullets.
+- Complete: listings, A+, SEO-rich copy.
 
-You can also say it naturally, for example: “make it very concise.”
-
-Five title options:
+Example:
 
 ```text
-Use $mai-title --product ~/my-products/WT801/ --count 5 --length medium
-```
-
-Bullets only:
-
-```text
-Use $mai-copy --product ~/my-products/WT801/ bullets --length medium
-```
-
-Amazon A+:
-
-```text
-Use $mai-copy --product ~/my-products/WT801/ a-plus --length full
-```
-
-Create an image-copy brief:
-
-```text
-Use $mai-brief to create wt801-image2 in ~/tasks/ with type image-copy
-```
-
-Use a brief:
-
-```text
-Use $mai-rich --product ~/my-products/WT801/ --requirement ~/tasks/wt801-image2.md
+Use $mai --product ~/my-products/WT801/ to write image copy. Make it very concise.
 ```
 
 ## Development
 
+Regular users do not need these commands.
+
 ```bash
+bun install
 bun run validate
 bun run test
 bun run lint
 bun run release:check
 ```
 
-Before publishing or reinstalling for real use, run:
+Install this checkout locally for development:
 
 ```bash
-bun run release:check
 bun run install:codex -- --force
 ```
 
-Restart Codex after reinstalling.
-
-The old `ecommerce-multilingual-copy` skill remains in the repository for compatibility reference. New users should use the `mai` entries.
+Legacy long-name and historical shortcut skill files remain in the repository for compatibility. New users should install and use only `$mai`.

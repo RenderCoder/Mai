@@ -1,23 +1,25 @@
 ---
 name: mai
 description: >
-  电商多语言文案短入口。用于生成亚马逊/速卖通标题、五点、Listing、A+、标语、图片文案，
-  也可根据图片、草图、原型图和复杂 brief 生成排版友好的文案。必须先在对话中给出结果、
-  理解确认、语言确认、数量统计和风险检查，用户确认后才写入文档。适合文员、设计师和运营使用。
-argument-hint: "[title|copy|rich] --product <folder-or-file> [--requirement <path>] [--languages CN,EN,DE,ES]"
+  电商多语言文案统一入口。只用 mai 一个技能完成标题、五点、Listing、A+、标语、图片文案、
+  产品资料模板、需求模板、版本检查和覆盖更新引导。可根据图片、草图、原型图和复杂 brief
+  生成排版友好的文案。必须先在对话中给出结果、理解确认、语言确认、数量统计和风险检查，
+  用户确认后才写入文档。适合文员、设计师和运营使用。
+argument-hint: "[title|copy|rich|product|brief|version] --product <folder-or-file> [--requirement <path>] [--languages CN,EN,DE,ES]"
 ---
 
 # Mai 电商文案
 
-Mai 取“卖”的拼音 `mai`，意思是帮用户把商品卖点写成能卖货的多语言文案。它也是短入口，优先让用户用简单自然语言表达需求，而不是记长命令。
+Mai 取“卖”的拼音 `mai`，意思是帮用户把商品卖点写成能卖货的多语言文案。它是唯一推荐入口：普通用户只需要记住 `$mai`，不要建议用户安装或使用其它 `mai-*` 子入口。
 
 ## 快速判断
 
-- 用户要标题、副标题、标题 A/B：按 `mai-title` 模式执行。
-- 用户要 Listing、五点、A+、标语、常规文案：按 `mai-copy` 模式执行。
-- 用户给了图片、草图、原型图、Figma 截图、版面限制、复杂 brief：按 `mai-rich` 模式执行。
-- 用户要创建产品资料文件夹模板：建议使用 `mai-product`。
-- 用户要创建文案需求模板：建议使用 `mai-brief`。
+- 用户要标题、副标题、标题 A/B：在 `$mai` 内执行标题模式。
+- 用户要 Listing、五点、A+、标语、常规文案：在 `$mai` 内执行常规文案模式。
+- 用户给了图片、草图、原型图、Figma 截图、版面限制、复杂 brief：在 `$mai` 内执行复杂图文模式。
+- 用户要创建产品资料文件夹模板：在 `$mai` 内执行产品资料模板流程。
+- 用户要创建文案需求模板：在 `$mai` 内执行需求模板流程。
+- 用户说“检查版本 / 版本 / 更新 / 是不是最新”：在 `$mai` 内执行版本检查流程，优先使用 shell 脚本。
 
 ## 必读工作流
 
@@ -36,10 +38,11 @@ Mai 取“卖”的拼音 `mai`，意思是帮用户把商品卖点写成能卖�
 
 ## 输入
 
-支持 Claude Code 和 Codex 两种调用方式：
+支持 Claude Code 和 Codex 两种调用方式。普通用户优先使用自然语言，不要求记参数：
 
 - Codex：`使用 $mai 给 ~/products/WT801/ 生成标题`
-- Codex：`使用 $mai-rich，根据这张草图和产品资料文件夹生成主图文案`
+- Codex：`使用 $mai 根据这张草图和产品资料文件夹生成主图文案`
+- Codex：`使用 $mai 检查版本`
 - Claude Code：`/mai title --product ~/products/WT801/`
 - Claude Code：`/mai rich --product ~/products/WT801/ --requirement ~/tasks/image2.md`
 
@@ -68,11 +71,7 @@ Mai 取“卖”的拼音 `mai`，意思是帮用户把商品卖点写成能卖�
 
 ## 保存
 
-确认后优先使用当前环境的文件写入能力。也可以调用内置脚本：
-
-```bash
-bun run <skill-dir>/scripts/save-result.ts --product <产品资料文件夹或文件> --copy-type <类型> --content <临时结果文件>
-```
+确认后优先使用当前环境的文件写入能力直接写入 Markdown 文档。不要要求普通用户运行 Bun、Python、npm 或其它开发者命令。
 
 保存后告知完整路径。
 
@@ -80,10 +79,10 @@ bun run <skill-dir>/scripts/save-result.ts --product <产品资料文件夹或�
 
 当用户询问 Codex 里的 Mai 如何更新、覆盖旧版或检查版本时：
 
-1. 检查版本：`sh ~/.codex/skills/mai/scripts/check-version.sh`
-2. 覆盖更新已安装的 Mai 入口：`sh ~/.codex/skills/mai/scripts/update-installed.sh`
-3. 一次安装或更新全部 Mai 入口：`sh ~/.codex/skills/mai/scripts/update-installed.sh --all`
+1. 检查版本时，优先运行：`sh ~/.codex/skills/mai/scripts/check-version.sh`
+2. 如果脚本提示本地不是最新版，明确告诉用户：先退出 Codex，再在系统终端运行 `sh ~/.codex/skills/mai/scripts/update-installed.sh`
+3. 如果用户只是问“怎么更新”，同样先提示退出 Codex，再运行上面的 shell 更新命令。
 
-更新脚本默认从 `https://github.com/RenderCoder/Mai` 拉取 `main`，目标是 `$CODEX_HOME/skills` 或 `~/.codex/skills`。它只依赖 macOS 默认可用的 shell、curl、tar、cp 和 mv，不要求普通用户安装 Bun 或 Python。它会先把自己复制到临时目录再执行，避免覆盖正在运行的安装脚本；旧技能目录会备份到 `.mai-update-backups/`。
+版本检查和更新脚本默认从 `https://github.com/RenderCoder/Mai` 读取最新版，目标是 `$CODEX_HOME/skills` 或 `~/.codex/skills`。它们只依赖 macOS 默认可用的 shell、curl、tar、cp 和 mv，不要求普通用户安装 Bun、Python 或其它开发环境。更新脚本会先把自己复制到临时目录再执行，避免覆盖正在运行的安装脚本；旧技能目录会备份到 `.mai-update-backups/`。
 
 更新后提醒用户重启 Codex。

@@ -68,20 +68,13 @@ describe("createInstallPlan", () => {
     );
   });
 
-  test("real manifest installs the short Mai entries", async () => {
+  test("real manifest installs only the main Mai entry", async () => {
     const codexHome = await tempDir();
     const plan = await createInstallPlan({ codexHome });
     const manifestSkills = await readRealManifestSkills();
 
     expect(plan.items.map((item) => item.skill)).toEqual(manifestSkills);
-    expect(manifestSkills).toEqual([
-      "mai",
-      "mai-title",
-      "mai-copy",
-      "mai-rich",
-      "mai-product",
-      "mai-brief",
-    ]);
+    expect(manifestSkills).toEqual(["mai"]);
     expect(manifestSkills).not.toContain("ecommerce-multilingual-copy");
     expect(manifestSkills).not.toContain("new-product");
     expect(manifestSkills).not.toContain("new-requirement");
