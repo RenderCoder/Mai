@@ -4,12 +4,13 @@
 
 ### Added
 - Skill version files and a `check-version.ts` helper for installed-version checks
+- macOS-friendly version checker: `sh ~/.codex/skills/mai/scripts/check-version.sh`
 - Short Mai skill family: `mai`, `mai-title`, `mai-copy`, `mai-rich`, `mai-product`, `mai-brief`
 - Length presets for copy generation: `minimal`, `medium`, `full`
 - Guided parameter confirmation with one numbered question at a time
 - Codex skill support with `agents/openai.yaml` metadata for all skills
 - One-command Codex installer: `bun run install:codex`
-- Installed-skill updater: `bun ~/.codex/skills/mai/scripts/update-installed.ts`
+- macOS-friendly installed-skill updater: `sh ~/.codex/skills/mai/scripts/update-installed.sh`
 - GitHub `$skill-installer` installation guidance for all Mai entries
 - Skill-local result save helper so Codex installs keep save support
 - Beginner-focused setup guides in English and Chinese

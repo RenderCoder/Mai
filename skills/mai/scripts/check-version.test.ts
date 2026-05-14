@@ -26,4 +26,36 @@ describe("check installed version", () => {
     expect(check.hasCliPreviewRule).toBe(true);
     expect(renderVersionCheck(check)).toContain("Mai installed version: 1.1.0");
   });
+
+  test("shell version check runs without Bun or Python", async () => {
+    const root = await tempDir();
+    const scriptDir = join(root, "scripts");
+    await mkdir(join(root, "references"), { recursive: true });
+    await mkdir(scriptDir, { recursive: true });
+    await writeFile(join(root, "VERSION"), "1.1.0\n");
+    await writeFile(
+      join(root, "references", "workflow.md"),
+      "三轮产出硬约束\n命令行可读性硬约束\n",
+    );
+
+    await Bun.write(
+      join(scriptDir, "check-version.sh"),
+      await Bun.file(join(import.meta.dir, "check-version.sh")).text(),
+    );
+
+    const proc = Bun.spawn(["/bin/sh", join(scriptDir, "check-version.sh")], {
+      stdout: "pipe",
+      stderr: "pipe",
+    });
+    const [code, stdout, stderr] = await Promise.all([
+      proc.exited,
+      new Response(proc.stdout).text(),
+      new Response(proc.stderr).text(),
+    ]);
+
+    expect(code).toBe(0);
+    expect(`${stdout}\n${stderr}`).toContain("Mai installed version: 1.1.0");
+    expect(stdout).toContain("Three-round workflow: yes");
+    expect(stdout).toContain("CLI-friendly preview: yes");
+  });
 });

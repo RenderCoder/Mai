@@ -134,34 +134,26 @@ Mai 才会写入 Markdown 结果文档。
 检查当前安装的版本：
 
 ```bash
-cat ~/.codex/skills/mai/VERSION
-bun ~/.codex/skills/mai/scripts/check-version.ts
+sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-如果版本是 `1.1.0`，并且看到：
-
-```text
-Three-round workflow: yes
-CLI-friendly preview: yes
-```
-
-说明你安装的是包含“三轮反思流程”和“命令行友好预览”的版本。
+如果版本是 `1.1.0`，并且 `Three-round workflow` 和 `CLI-friendly preview` 都是 `yes`，说明你安装的是包含“三轮反思流程”和“命令行友好预览”的版本。
 
 如果你以前安装过旧版，`$skill-installer` 看到 `~/.codex/skills/mai` 已存在时会停止，不会自动覆盖。
 
-已经装过 `$mai` 的用户，可以直接运行自带更新脚本：
+已经装过新版 `$mai` 的用户，可以直接运行自带更新脚本：
 
 ```bash
-bun ~/.codex/skills/mai/scripts/update-installed.ts
+sh ~/.codex/skills/mai/scripts/update-installed.sh
 ```
 
 更新前想先看看会覆盖哪些入口，可以运行：
 
 ```bash
-bun ~/.codex/skills/mai/scripts/update-installed.ts --dry-run
+sh ~/.codex/skills/mai/scripts/update-installed.sh --dry-run
 ```
 
-这个脚本会从 GitHub 拉取最新版，默认只更新你已经安装过的 Mai 入口，并把旧目录备份到：
+这个脚本不需要安装 Bun 或 Python。它会从 GitHub 拉取最新版，默认只更新你已经安装过的 Mai 入口，并把旧目录备份到：
 
 ```text
 ~/.codex/skills/.mai-update-backups/
@@ -170,18 +162,15 @@ bun ~/.codex/skills/mai/scripts/update-installed.ts --dry-run
 如果你想一次安装或更新所有 Mai 入口：
 
 ```bash
-bun ~/.codex/skills/mai/scripts/update-installed.ts --all
+sh ~/.codex/skills/mai/scripts/update-installed.sh --all
 ```
 
 更新后重启 Codex，再检查版本。
 
-如果你还没有安装 `$mai`，或者想从下载好的项目目录安装，可以用本地安装方式：
+如果你的旧版 Mai 里还没有 `update-installed.sh`，可以直接下载最新版更新脚本到临时目录运行：
 
 ```bash
-git clone https://github.com/RenderCoder/Mai.git
-cd Mai
-bun install
-bun run install:codex -- --force
+curl -fsSL https://raw.githubusercontent.com/RenderCoder/Mai/main/skills/mai/scripts/update-installed.sh -o /tmp/mai-update-installed.sh && sh /tmp/mai-update-installed.sh
 ```
 
 如果你用熟了，想让入口更明确，再按需安装：
@@ -196,9 +185,9 @@ bun run install:codex -- --force
 
 注意：请先安装 `mai`，再安装其它 `mai-*` 子入口。`mai-title`、`mai-copy` 和 `mai-rich` 会读取 `mai` 里的共享工作流规则。
 
-### 方式二：本地安装
+### 方式二：开发者本地安装
 
-在项目目录运行：
+普通用户不需要这一步。只有你要开发或维护这个项目时，才需要在项目目录运行：
 
 ```bash
 bun install

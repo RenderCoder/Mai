@@ -186,6 +186,8 @@ describe("updateInstalledSkills", () => {
     ]);
 
     expect(`${stdout}\n${stderr}`).toContain("overwrite: mai");
+    expect(stdout).toContain("Mai update:");
+    expect(stdout).not.toContain("Mai update dry run");
     expect(code).toBe(0);
     expect(await Bun.file(join(oldSkill, "SKILL.md")).text()).toContain(
       "new mai",
@@ -193,5 +195,125 @@ describe("updateInstalledSkills", () => {
     expect(existsSync(join(codexHome, "skills", ".mai-update-backups"))).toBe(
       true,
     );
+  });
+
+  test("macOS shell updater runs without Bun or Python for local source updates", async () => {
+    const sourceRoot = await createSourceRoot(["mai"]);
+    const codexHome = await tempDir();
+    const oldSkill = join(codexHome, "skills", "mai");
+    await mkdir(oldSkill, { recursive: true });
+    await writeFile(join(oldSkill, "SKILL.md"), "old mai\n");
+    await writeFile(join(oldSkill, "VERSION"), "0.1.0\n");
+
+    const proc = Bun.spawn(
+      [
+        "/bin/sh",
+        join(import.meta.dir, "update-installed.sh"),
+        "--source-root",
+        ".",
+        "--codex-home",
+        codexHome,
+      ],
+      {
+        cwd: sourceRoot,
+        stdout: "pipe",
+        stderr: "pipe",
+      },
+    );
+    const [code, stdout, stderr] = await Promise.all([
+      proc.exited,
+      new Response(proc.stdout).text(),
+      new Response(proc.stderr).text(),
+    ]);
+
+    expect(`${stdout}\n${stderr}`).toContain("overwrite: mai");
+    expect(code).toBe(0);
+    expect(await Bun.file(join(oldSkill, "SKILL.md")).text()).toContain(
+      "new mai",
+    );
+    expect(existsSync(join(codexHome, "skills", ".mai-update-backups"))).toBe(
+      true,
+    );
+  });
+
+  test("macOS shell updater dry-run preserves existing installed skills", async () => {
+    const sourceRoot = await createSourceRoot(["mai"]);
+    const codexHome = await tempDir();
+    const oldSkill = join(codexHome, "skills", "mai");
+    await mkdir(oldSkill, { recursive: true });
+    await writeFile(join(oldSkill, "SKILL.md"), "old mai\n");
+    await writeFile(join(oldSkill, "VERSION"), "0.1.0\n");
+
+    const proc = Bun.spawn(
+      [
+        "/bin/sh",
+        join(import.meta.dir, "update-installed.sh"),
+        "--source-root",
+        ".",
+        "--codex-home",
+        codexHome,
+        "--dry-run",
+      ],
+      {
+        cwd: sourceRoot,
+        stdout: "pipe",
+        stderr: "pipe",
+      },
+    );
+    const [code, stdout, stderr] = await Promise.all([
+      proc.exited,
+      new Response(proc.stdout).text(),
+      new Response(proc.stderr).text(),
+    ]);
+
+    expect(`${stdout}\n${stderr}`).toContain("Mai update dry run");
+    expect(code).toBe(0);
+    expect(await Bun.file(join(oldSkill, "SKILL.md")).text()).toBe("old mai\n");
+    expect(existsSync(join(codexHome, "skills", ".mai-update-backups"))).toBe(
+      false,
+    );
+  });
+
+  test("macOS shell updater all mode installs every Mai entry", async () => {
+    const skills = [
+      "mai",
+      "mai-title",
+      "mai-copy",
+      "mai-rich",
+      "mai-product",
+      "mai-brief",
+    ];
+    const sourceRoot = await createSourceRoot(skills);
+    const codexHome = await tempDir();
+
+    const proc = Bun.spawn(
+      [
+        "/bin/sh",
+        join(import.meta.dir, "update-installed.sh"),
+        "--source-root",
+        ".",
+        "--codex-home",
+        codexHome,
+        "--all",
+      ],
+      {
+        cwd: sourceRoot,
+        stdout: "pipe",
+        stderr: "pipe",
+      },
+    );
+    const [code, stdout, stderr] = await Promise.all([
+      proc.exited,
+      new Response(proc.stdout).text(),
+      new Response(proc.stderr).text(),
+    ]);
+
+    expect(code).toBe(0);
+    expect(`${stdout}\n${stderr}`).toContain("copy: mai-brief");
+    for (const skill of skills) {
+      expect(
+        await Bun.file(join(codexHome, "skills", skill, "SKILL.md")).exists(),
+      ).toBe(true);
+    }
   });
 });

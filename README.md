@@ -36,43 +36,39 @@ Installing only `$mai` keeps the core capability: titles, listings, bullets, A+,
 Check the installed version:
 
 ```bash
-cat ~/.codex/skills/mai/VERSION
-bun ~/.codex/skills/mai/scripts/check-version.ts
+sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-Expected version: `1.1.0`. The check script should also report `Three-round workflow: yes` and `CLI-friendly preview: yes`.
+Expected version: `1.1.0`. The check should also report `Three-round workflow: yes` and `CLI-friendly preview: yes`.
 
 If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it.
 
-If `$mai` is already installed, update in place with Mai's bundled updater:
+If a recent `$mai` is already installed, update in place with Mai's bundled updater:
 
 ```bash
-bun ~/.codex/skills/mai/scripts/update-installed.ts
+sh ~/.codex/skills/mai/scripts/update-installed.sh
 ```
 
 To preview what would be overwritten first:
 
 ```bash
-bun ~/.codex/skills/mai/scripts/update-installed.ts --dry-run
+sh ~/.codex/skills/mai/scripts/update-installed.sh --dry-run
 ```
 
-The updater pulls the latest copy from GitHub, updates the Mai entries that are already installed, and backs up old directories under `~/.codex/skills/.mai-update-backups/`. It stages itself in a temporary directory before overwriting installed files, so it can update the `mai` folder it was launched from.
+The updater does not require Bun or Python. It pulls the latest copy from GitHub, updates the Mai entries that are already installed, and backs up old directories under `~/.codex/skills/.mai-update-backups/`. It stages itself in a temporary directory before overwriting installed files, so it can update the `mai` folder it was launched from.
 
 To install or update all Mai entries:
 
 ```bash
-bun ~/.codex/skills/mai/scripts/update-installed.ts --all
+sh ~/.codex/skills/mai/scripts/update-installed.sh --all
 ```
 
 Restart Codex after updating, then run the version check again.
 
-You can also clone the repo and run the local installer with `--force`:
+If your old Mai installation does not have `update-installed.sh`, download the latest updater into `/tmp` and run it:
 
 ```bash
-git clone https://github.com/RenderCoder/Mai.git
-cd Mai
-bun install
-bun run install:codex -- --force
+curl -fsSL https://raw.githubusercontent.com/RenderCoder/Mai/main/skills/mai/scripts/update-installed.sh -o /tmp/mai-update-installed.sh && sh /tmp/mai-update-installed.sh
 ```
 
 Install the optional shortcuts later if you want more explicit entries:
@@ -87,9 +83,9 @@ Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/ski
 
 Install `mai` before the `mai-*` subskills because the subskills read shared workflow references from `mai`.
 
-### Local one-command install
+### Developer local install
 
-From this project directory:
+Regular users do not need this. Use it only when developing or maintaining this repository:
 
 ```bash
 bun install
