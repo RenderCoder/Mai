@@ -1,6 +1,6 @@
 {
   "name": "mai",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Mai generates confirmed multilingual e-commerce copy for Codex and Claude Code. It supports short memorable entries for titles, copy, rich image/sketch briefs, product files, and copy briefs.",
   "author": {
     "name": "Bevis",

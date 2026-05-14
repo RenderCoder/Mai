@@ -92,6 +92,15 @@ for (const skillName of pluginSkills) {
   }
   pass(`skills/${skillName}/ directory exists`);
 
+  const versionPath = join(sDir, "VERSION");
+  if (!existsSync(versionPath)) {
+    fail(`skills/${skillName}/VERSION not found`);
+  } else {
+    const version = (await Bun.file(versionPath).text()).trim();
+    if (!version) fail(`skills/${skillName}/VERSION is empty`);
+    else pass(`skills/${skillName}/VERSION = ${version}`);
+  }
+
   const sMdPath = join(sDir, "SKILL.md");
   if (!existsSync(sMdPath)) {
     fail(`skills/${skillName}/SKILL.md not found`);
@@ -173,6 +182,7 @@ console.log("\n4. Skill-local scripts");
 const skillScriptFiles = [
   "scripts/save-result.ts",
   "scripts/collect-product-source.ts",
+  "scripts/check-version.ts",
 ];
 for (const file of skillScriptFiles) {
   const path = join(ROOT, "skills", "mai", file);

@@ -33,6 +33,26 @@ Use $mai
 
 Installing only `$mai` keeps the core capability: titles, listings, bullets, A+, image copy, multilingual output, chat-first review, and confirmed saving.
 
+Check the installed version:
+
+```bash
+cat ~/.codex/skills/mai/VERSION
+bun ~/.codex/skills/mai/scripts/check-version.ts
+```
+
+Expected version: `1.1.0`. The check script should also report `Three-round workflow: yes` and `CLI-friendly preview: yes`.
+
+If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it. To update, clone the repo and run the local installer with `--force`:
+
+```bash
+git clone https://github.com/RenderCoder/Mai.git
+cd Mai
+bun install
+bun run install:codex -- --force
+```
+
+Restart Codex after updating.
+
 Install the optional shortcuts later if you want more explicit entries:
 
 ```text
@@ -126,10 +146,15 @@ Reply with a number.
 - Scene understanding
 - Output languages
 - Assumptions and missing information
-- Copy table
+- First round: draft
+- Second round: reflection and improvement suggestions
+- Third round: final rewrite
+- Copy preview
 - Character, word, and line-count statistics
 - Layout risk
 - Compliance risk
+
+If product context, platform, language, placement, quantity limits, or compliance evidence is unclear, Mai should ask a blocking confirmation question before generating copy.
 
 Only after you confirm should it write the Markdown result document.
 
@@ -148,7 +173,7 @@ English headline max 4 words, subline max 6 words, max 3 labels.
 Show copy and character counts first. Do not write the document yet.
 ```
 
-Mai should first show its understanding, copy table, character/word/line counts, and layout risk. After you confirm, it writes the Markdown document.
+Mai should first show its understanding, three-round copy flow, character/word/line counts, and layout risk. After you confirm, it writes the Markdown document.
 
 Natural-language version:
 

@@ -97,7 +97,10 @@ Mai 会先展示：
 
 - 理解确认
 - 当前假设
-- 文案表
+- 第一轮：初步版本
+- 第二轮：反思自查与优化建议
+- 第三轮：最终版本
+- 文案预览
 - 数量统计
 - 合规与风险检查
 - 待确认事项
@@ -127,6 +130,33 @@ Mai 才会写入 Markdown 结果文档。
 ```
 
 只安装 `$mai` 已经可以完成大部分工作，包括标题、Listing、五点、A+、图片文案、多语言输出和确认后保存。
+
+检查当前安装的版本：
+
+```bash
+cat ~/.codex/skills/mai/VERSION
+bun ~/.codex/skills/mai/scripts/check-version.ts
+```
+
+如果版本是 `1.1.0`，并且看到：
+
+```text
+Three-round workflow: yes
+CLI-friendly preview: yes
+```
+
+说明你安装的是包含“三轮反思流程”和“命令行友好预览”的版本。
+
+如果你以前安装过旧版，`$skill-installer` 看到 `~/.codex/skills/mai` 已存在时会停止，不会自动覆盖。更新旧版建议使用本地安装方式：
+
+```bash
+git clone https://github.com/RenderCoder/Mai.git
+cd Mai
+bun install
+bun run install:codex -- --force
+```
+
+然后重启 Codex，再检查版本。
 
 如果你用熟了，想让入口更明确，再按需安装：
 
@@ -482,14 +512,55 @@ CN,EN,DE,ES
 - 英文主标题按 4 个词以内控制。
 - 德语和西语通常更长，需要优先压缩标签文案。
 
-## 最终文案表
-| 位置 | 中文 | 英语 | 德语 | 西班牙语 |
-| --- | --- | --- | --- | --- |
-| 主标题 | 远程安心浇水 | Water From Anywhere | ... | ... |
+## 第一轮：初步版本
+
+方案 1：推荐
+- 位置：主标题
+  - 中文：远程安心浇水
+  - 英语：Water From Anywhere
+  - 德语：...
+  - 西班牙语：...
+
+- 位置：副标题
+  - 中文：用 app 查看花园浇水状态
+  - 英语：Check watering status from the app
+  - 德语：...
+  - 西班牙语：...
+
+## 第二轮：反思自查与优化建议
+
+- 英文主标题较短，适合图片版位。
+- 德语和西语会更长，标签文案需要继续压缩。
+- 不写 best、guaranteed、always 等不可验证承诺。
+- 如果强调覆盖范围，必须说明“室内范围受户型影响”。
+
+## 第三轮：最终版本
+
+- 位置：主标题
+  - 中文：随时查看家中气候
+  - 英语：Check Home Climate Anytime
+  - 德语：Raumklima jederzeit prüfen
+  - 西班牙语：Consulta el clima del hogar
+
+- 位置：副标题
+  - 中文：用 app 查看温湿度变化
+  - 英语：View temperature and humidity changes in the app
+  - 德语：Temperatur und Luftfeuchtigkeit per App im Blick
+  - 西班牙语：Consulta cambios de temperatura y humedad en la app
 
 ## 数量统计
-| 位置 | 语言 | 字符数 | 词数 | 行数建议 | 是否超限 |
-| --- | --- | ---: | ---: | --- | --- |
+
+- 主标题 / 英语
+  - 字符数：19
+  - 词数：3
+  - 行数建议：1 行
+  - 是否超限：否
+
+- 副标题 / 英语
+  - 字符数：34
+  - 词数：6
+  - 行数建议：1-2 行
+  - 是否超限：否
 
 ## 合规与风险检查
 - 不使用 all-weather、year-round、freeze-proof。
@@ -499,6 +570,8 @@ CN,EN,DE,ES
 - 是否更偏“远程安心”还是“无需网关省钱”？
 - 确认后我再写入 Markdown 文档。
 ```
+
+注意：Mai 在对话里会尽量避免 Markdown 表格，因为表格在命令行里不容易读。你确认后，保存下来的 Markdown 文档可以使用表格，方便复制、对照和交给设计同事。
 
 你满意后再说：
 

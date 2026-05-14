@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Added
+- Skill version files and a `check-version.ts` helper for installed-version checks
 - Short Mai skill family: `mai`, `mai-title`, `mai-copy`, `mai-rich`, `mai-product`, `mai-brief`
 - Length presets for copy generation: `minimal`, `medium`, `full`
 - Guided parameter confirmation with one numbered question at a time
@@ -17,6 +18,9 @@
 - Detailed Simplified Chinese user manual at `docs/user-manual.zh-CN.md`
 
 ### Changed
+- Copy generation now requires a three-round draft, reflection, and final rewrite flow before user confirmation
+- Ambiguous key requirements now block generation and trigger one-at-a-time confirmation
+- Chat previews now avoid Markdown tables; saved documents may still use tables
 - New users are guided to short Mai entries instead of the old long `ecommerce-multilingual-copy` entry
 - Docs now explain that Mai means “卖” / selling-copy AI
 - Copy generation now shows results, understanding, language choices, count statistics, and risks in chat before saving
