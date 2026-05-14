@@ -22,7 +22,7 @@ Mai 的默认输出语言是：
 中文、英文、德语、西班牙语
 ```
 
-你也可以指定只要英文，或自定义语言。
+你也可以指定英文、德语、法语等其它语言。但为了方便中文团队审核，Mai 永远会把简体中文文案放在第一位；例如你说“只要英文”，实际会先给中文审核版，再给英文版。
 
 ## 2. 最短上手流程
 
@@ -137,7 +137,7 @@ Mai 才会写入 Markdown 结果文档。
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-如果版本是 `1.1.0`，并且 `Three-round workflow` 和 `CLI-friendly preview` 都是 `yes`，说明你安装的是包含“三轮反思流程”和“命令行友好预览”的版本。
+如果版本是 `1.1.1`，并且 `Three-round workflow`、`CLI-friendly preview`、`Chinese-first copy` 都是 `yes`，说明你安装的是包含“三轮反思流程”“命令行友好预览”和“中文优先文案”的版本。
 
 如果你以前安装过旧版，`$skill-installer` 看到 `~/.codex/skills/mai` 已存在时会停止，不会自动覆盖。
 
@@ -366,11 +366,13 @@ Mai 应该在“当前假设”或“待确认事项”里指出冲突，并使�
 使用 $mai-copy --product ~/my-products/WT801/ bullets --length medium
 ```
 
-只要英文五点：
+英文五点：
 
 ```text
 使用 $mai-copy --product ~/my-products/WT801/ bullets --languages EN
 ```
+
+注意：即使这里写 `--languages EN`，Mai 也会先输出简体中文审核版，再输出英文版。
 
 ### 生成完整 Listing
 
@@ -467,7 +469,7 @@ Mai 会自己判断任务类型，并在缺少关键信息时一次问一个问�
 CN,EN,DE,ES
 ```
 
-只要英文：
+英文：
 
 ```text
 使用 $mai-copy --product ~/my-products/WT801/ bullets --languages EN
@@ -485,7 +487,7 @@ CN,EN,DE,ES
 使用 $mai-title --product ~/my-products/WT801/ --languages EN,FR,IT
 ```
 
-注意：Mai 默认用简体中文和你解释、提问、审查；这不影响最终文案可以输出英文、德语、西语等目标语言。
+注意：Mai 默认用简体中文和你解释、提问、审查；文案输出也永远中文优先。`--languages EN,FR,IT` 的实际输出顺序是：简体中文、英语、法语、意大利语。
 
 ## 9. Mai 会怎么提问
 

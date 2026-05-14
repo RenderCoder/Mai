@@ -11,7 +11,7 @@ argument-hint: "--product <folder-or-file> [--length minimal|medium|full] [--lan
 
 这是 `mai` 的标题模式。执行时读取 `../mai/references/workflow.md`，并按其中的确认优先、对话先展示、确认后写文档规则执行。
 
-默认使用简体中文和用户沟通：上下文理解、提问、讲解、审查、风险说明、保存提示都用简体中文；只有最终标题文案按用户指定目标语言输出。
+默认使用简体中文和用户沟通：上下文理解、提问、讲解、审查、风险说明、保存提示都用简体中文；标题文案必须始终先输出简体中文审核版，再输出用户指定的其它语言。
 
 用户可以只用自然语言说“帮我写标题”。`--product` 优先使用产品资料文件夹，并递归读取其中所有可用文本资料；也兼容单个 Markdown 文件。缺少产品资料、平台、语言、长度或方案数量时，按 `workflow.md` 的引导式参数确认一次问一个数字选择题。
 
@@ -20,7 +20,7 @@ argument-hint: "--product <folder-or-file> [--length minimal|medium|full] [--lan
 - 文案类型：`title`
 - 默认输出：标题 + 副标题
 - 默认方案数：3 组；用户指定 `--count` 时按用户要求。
-- 默认语言：`CN,EN,DE,ES`
+- 默认语言：`CN,EN,DE,ES`；若用户指定 `EN,DE` 等不含中文的语言列表，也必须实际输出 `CN,EN,DE`，且中文第一。
 - 默认长度：`medium`。图片主标题、包装标题、小版位标题默认使用 `minimal`；SEO Listing 标题可使用 `full`。
 
 ## 必须确认
@@ -38,6 +38,7 @@ argument-hint: "--product <folder-or-file> [--length minimal|medium|full] [--lan
 
 - 理解确认
 - 当前假设
+- 语言顺序确认：简体中文永远第一
 - 第一轮：初步版本
 - 第二轮：反思自查与优化建议
 - 第三轮：最终版本

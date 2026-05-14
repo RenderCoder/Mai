@@ -174,7 +174,23 @@ const workflowPath = join(ROOT, "skills", "mai", "references", "workflow.md");
 if (!existsSync(workflowPath)) {
   fail("skills/mai/references/workflow.md not found");
 } else {
+  const workflow = await Bun.file(workflowPath).text();
   pass("skills/mai/references/workflow.md");
+  if (!workflow.includes("三轮产出硬约束")) {
+    fail("skills/mai/references/workflow.md: missing 三轮产出硬约束");
+  } else {
+    pass("workflow marker: 三轮产出硬约束");
+  }
+  if (!workflow.includes("命令行可读性硬约束")) {
+    fail("skills/mai/references/workflow.md: missing 命令行可读性硬约束");
+  } else {
+    pass("workflow marker: 命令行可读性硬约束");
+  }
+  if (!workflow.includes("中文优先硬约束")) {
+    fail("skills/mai/references/workflow.md: missing 中文优先硬约束");
+  } else {
+    pass("workflow marker: 中文优先硬约束");
+  }
 }
 
 // 4. Check example files

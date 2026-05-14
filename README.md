@@ -39,7 +39,7 @@ Check the installed version:
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-Expected version: `1.1.0`. The check should also report `Three-round workflow: yes` and `CLI-friendly preview: yes`.
+Expected version: `1.1.1`. The check should also report `Three-round workflow: yes`, `CLI-friendly preview: yes`, and `Chinese-first copy: yes`.
 
 If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it.
 
@@ -198,6 +198,8 @@ Show copy and character counts first. Do not write the document yet.
 ```
 
 Mai should first show its understanding, three-round copy flow, character/word/line counts, and layout risk. After you confirm, it writes the Markdown document.
+
+Chinese-first team review rule: Mai always puts Simplified Chinese copy first, even if `--languages` does not include `CN`. For example, `--languages EN,DE` actually outputs Simplified Chinese, English, then German.
 
 Natural-language version:
 

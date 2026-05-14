@@ -30,3 +30,9 @@ if [ -f "$WORKFLOW_FILE" ] && grep -q "命令行可读性硬约束" "$WORKFLOW_F
 else
   echo "CLI-friendly preview: no"
 fi
+
+if [ -f "$WORKFLOW_FILE" ] && grep -q "中文优先硬约束" "$WORKFLOW_FILE"; then
+  echo "Chinese-first copy: yes"
+else
+  echo "Chinese-first copy: no"
+fi

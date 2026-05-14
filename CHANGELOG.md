@@ -21,6 +21,7 @@
 - Detailed Simplified Chinese user manual at `docs/user-manual.zh-CN.md`
 
 ### Changed
+- Copy output now always includes Simplified Chinese first as the internal review baseline, even when users request only other target languages
 - Copy generation now requires a three-round draft, reflection, and final rewrite flow before user confirmation
 - Ambiguous key requirements now block generation and trigger one-at-a-time confirmation
 - Chat previews now avoid Markdown tables; saved documents may still use tables
