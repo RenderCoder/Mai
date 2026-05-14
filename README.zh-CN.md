@@ -39,7 +39,7 @@ Mai 是一个给 **Codex** 和 **Claude Code** 用的电商多语言文案技能
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-期望看到版本 `1.1.1`，并且 `Three-round workflow`、`CLI-friendly preview`、`Chinese-first copy` 都是 `yes`。
+期望看到版本 `1.1.2`，并且 `Double-reflection workflow`、`CLI-friendly preview`、`Chinese-first copy`、`Short-word layout` 都是 `yes`。
 
 如果你之前已经安装过旧版，`$skill-installer` 遇到已存在目录会停止，不会自动覆盖。
 
@@ -174,9 +174,11 @@ Mai 不会一上来就写文件。
 - 它对场景的理解
 - 要输出哪些语言
 - 当前假设和缺失信息
-- 第一轮：初步版本
-- 第二轮：反思自查与优化建议
-- 第三轮：最终版本
+- 第一步：初步版本
+- 第二步：第一次反思自查与优化建议
+- 第三步：修正版
+- 第四步：第二次反思与最终调整建议
+- 第五步：最终版本
 - 文案预览，用编号方案和分组列表展示
 - 字符数、词数、行数统计，用短列表展示
 - 是否有二维排版风险

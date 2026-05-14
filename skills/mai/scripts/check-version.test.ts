@@ -13,20 +13,25 @@ describe("check installed version", () => {
   test("reports version and workflow markers", async () => {
     const root = await tempDir();
     await mkdir(join(root, "references"), { recursive: true });
-    await writeFile(join(root, "VERSION"), "1.1.1\n");
+    await writeFile(join(root, "VERSION"), "1.1.2\n");
     await writeFile(
       join(root, "references", "workflow.md"),
-      "三轮产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n",
+      "双反思产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n长单词排版硬约束\n",
     );
 
     const check = await checkInstalledVersion(root);
 
-    expect(check.version).toBe("1.1.1");
-    expect(check.hasThreeRoundWorkflow).toBe(true);
+    expect(check.version).toBe("1.1.2");
+    expect(check.hasDoubleReflectionWorkflow).toBe(true);
     expect(check.hasCliPreviewRule).toBe(true);
     expect(check.hasChineseFirstCopyRule).toBe(true);
-    expect(renderVersionCheck(check)).toContain("Mai installed version: 1.1.1");
+    expect(check.hasShortWordLayoutRule).toBe(true);
+    expect(renderVersionCheck(check)).toContain("Mai installed version: 1.1.2");
+    expect(renderVersionCheck(check)).toContain(
+      "Double-reflection workflow: yes",
+    );
     expect(renderVersionCheck(check)).toContain("Chinese-first copy: yes");
+    expect(renderVersionCheck(check)).toContain("Short-word layout: yes");
   });
 
   test("shell version check runs without Bun or Python", async () => {
@@ -34,10 +39,10 @@ describe("check installed version", () => {
     const scriptDir = join(root, "scripts");
     await mkdir(join(root, "references"), { recursive: true });
     await mkdir(scriptDir, { recursive: true });
-    await writeFile(join(root, "VERSION"), "1.1.1\n");
+    await writeFile(join(root, "VERSION"), "1.1.2\n");
     await writeFile(
       join(root, "references", "workflow.md"),
-      "三轮产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n",
+      "双反思产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n长单词排版硬约束\n",
     );
 
     await Bun.write(
@@ -56,9 +61,10 @@ describe("check installed version", () => {
     ]);
 
     expect(code).toBe(0);
-    expect(`${stdout}\n${stderr}`).toContain("Mai installed version: 1.1.1");
-    expect(stdout).toContain("Three-round workflow: yes");
+    expect(`${stdout}\n${stderr}`).toContain("Mai installed version: 1.1.2");
+    expect(stdout).toContain("Double-reflection workflow: yes");
     expect(stdout).toContain("CLI-friendly preview: yes");
     expect(stdout).toContain("Chinese-first copy: yes");
+    expect(stdout).toContain("Short-word layout: yes");
   });
 });

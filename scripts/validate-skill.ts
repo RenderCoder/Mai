@@ -176,10 +176,10 @@ if (!existsSync(workflowPath)) {
 } else {
   const workflow = await Bun.file(workflowPath).text();
   pass("skills/mai/references/workflow.md");
-  if (!workflow.includes("三轮产出硬约束")) {
-    fail("skills/mai/references/workflow.md: missing 三轮产出硬约束");
+  if (!workflow.includes("双反思产出硬约束")) {
+    fail("skills/mai/references/workflow.md: missing 双反思产出硬约束");
   } else {
-    pass("workflow marker: 三轮产出硬约束");
+    pass("workflow marker: 双反思产出硬约束");
   }
   if (!workflow.includes("命令行可读性硬约束")) {
     fail("skills/mai/references/workflow.md: missing 命令行可读性硬约束");
@@ -190,6 +190,11 @@ if (!existsSync(workflowPath)) {
     fail("skills/mai/references/workflow.md: missing 中文优先硬约束");
   } else {
     pass("workflow marker: 中文优先硬约束");
+  }
+  if (!workflow.includes("长单词排版硬约束")) {
+    fail("skills/mai/references/workflow.md: missing 长单词排版硬约束");
+  } else {
+    pass("workflow marker: 长单词排版硬约束");
   }
 }
 

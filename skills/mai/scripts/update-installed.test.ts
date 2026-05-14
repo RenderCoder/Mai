@@ -21,7 +21,7 @@ async function createSkill(
     join(dir, "SKILL.md"),
     `---\nname: ${skill}\n---\n${marker}\n`,
   );
-  await writeFile(join(dir, "VERSION"), "1.1.1\n");
+  await writeFile(join(dir, "VERSION"), "1.1.2\n");
 }
 
 async function createSourceRoot(skills = ["mai"]): Promise<string> {

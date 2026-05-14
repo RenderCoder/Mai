@@ -19,10 +19,10 @@ VERSION=$(cat "$VERSION_FILE")
 echo "Mai installed version: $VERSION"
 echo "Skill directory: $SKILL_DIR"
 
-if [ -f "$WORKFLOW_FILE" ] && grep -q "三轮产出硬约束" "$WORKFLOW_FILE"; then
-  echo "Three-round workflow: yes"
+if [ -f "$WORKFLOW_FILE" ] && grep -q "双反思产出硬约束" "$WORKFLOW_FILE"; then
+  echo "Double-reflection workflow: yes"
 else
-  echo "Three-round workflow: no"
+  echo "Double-reflection workflow: no"
 fi
 
 if [ -f "$WORKFLOW_FILE" ] && grep -q "命令行可读性硬约束" "$WORKFLOW_FILE"; then
@@ -35,4 +35,10 @@ if [ -f "$WORKFLOW_FILE" ] && grep -q "中文优先硬约束" "$WORKFLOW_FILE"; 
   echo "Chinese-first copy: yes"
 else
   echo "Chinese-first copy: no"
+fi
+
+if [ -f "$WORKFLOW_FILE" ] && grep -q "长单词排版硬约束" "$WORKFLOW_FILE"; then
+  echo "Short-word layout: yes"
+else
+  echo "Short-word layout: no"
 fi

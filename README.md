@@ -39,7 +39,7 @@ Check the installed version:
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-Expected version: `1.1.1`. The check should also report `Three-round workflow: yes`, `CLI-friendly preview: yes`, and `Chinese-first copy: yes`.
+Expected version: `1.1.2`. The check should also report `Double-reflection workflow: yes`, `CLI-friendly preview: yes`, `Chinese-first copy: yes`, and `Short-word layout: yes`.
 
 If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it.
 

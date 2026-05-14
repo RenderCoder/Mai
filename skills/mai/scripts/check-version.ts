@@ -10,9 +10,10 @@ import { dirname, join, resolve } from "node:path";
 export interface VersionCheck {
   skillDir: string;
   version: string;
-  hasThreeRoundWorkflow: boolean;
+  hasDoubleReflectionWorkflow: boolean;
   hasCliPreviewRule: boolean;
   hasChineseFirstCopyRule: boolean;
+  hasShortWordLayoutRule: boolean;
 }
 
 function findSkillDir(): string {
@@ -33,9 +34,10 @@ export async function checkInstalledVersion(
   return {
     skillDir,
     version,
-    hasThreeRoundWorkflow: workflow.includes("三轮产出硬约束"),
+    hasDoubleReflectionWorkflow: workflow.includes("双反思产出硬约束"),
     hasCliPreviewRule: workflow.includes("命令行可读性硬约束"),
     hasChineseFirstCopyRule: workflow.includes("中文优先硬约束"),
+    hasShortWordLayoutRule: workflow.includes("长单词排版硬约束"),
   };
 }
 
@@ -43,9 +45,10 @@ export function renderVersionCheck(check: VersionCheck): string {
   return [
     `Mai installed version: ${check.version}`,
     `Skill directory: ${check.skillDir}`,
-    `Three-round workflow: ${check.hasThreeRoundWorkflow ? "yes" : "no"}`,
+    `Double-reflection workflow: ${check.hasDoubleReflectionWorkflow ? "yes" : "no"}`,
     `CLI-friendly preview: ${check.hasCliPreviewRule ? "yes" : "no"}`,
     `Chinese-first copy: ${check.hasChineseFirstCopyRule ? "yes" : "no"}`,
+    `Short-word layout: ${check.hasShortWordLayoutRule ? "yes" : "no"}`,
   ].join("\n");
 }
 
