@@ -114,18 +114,29 @@ Mai 才会写入 Markdown 结果文档。
 
 ### 方式一：从 GitHub 安装
 
-如果项目已经发布到 GitHub，可以在 Codex 中逐条输入：
+推荐先安装主入口体验：
 
 ```text
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
+```
+
+安装后重启 Codex，然后输入：
+
+```text
+使用 $mai
+```
+
+只安装 `$mai` 已经可以完成大部分工作，包括标题、Listing、五点、A+、图片文案、多语言输出和确认后保存。
+
+如果你用熟了，想让入口更明确，再按需安装：
+
+```text
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
-
-安装后重启 Codex。
 
 注意：请先安装 `mai`，再安装其它 `mai-*` 子入口。`mai-title`、`mai-copy` 和 `mai-rich` 会读取 `mai` 里的共享工作流规则。
 

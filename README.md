@@ -19,21 +19,28 @@ Use the short entries instead of remembering a long command. Users can also desc
 
 ### From GitHub with `$skill-installer`
 
-After publishing this repository to GitHub, install the active Mai entries from Codex:
+Most users should install the main entry first:
 
 ```text
 Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
-Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
 
 Restart Codex after installing, then use:
 
 ```text
 Use $mai
+```
+
+Installing only `$mai` keeps the core capability: titles, listings, bullets, A+, image copy, multilingual output, chat-first review, and confirmed saving.
+
+Install the optional shortcuts later if you want more explicit entries:
+
+```text
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
 
 Install `mai` before the `mai-*` subskills because the subskills read shared workflow references from `mai`.

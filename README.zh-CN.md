@@ -19,15 +19,10 @@ Mai 是一个给 **Codex** 和 **Claude Code** 用的电商多语言文案技能
 
 ### 方式一：从 GitHub 安装
 
-如果你已经把这个项目发布到 GitHub，可以在 Codex 里直接输入：
+大多数用户先安装主入口就够了：
 
 ```text
 使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
-使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
 
 装好后重启 Codex，然后输入：
@@ -36,7 +31,19 @@ Mai 是一个给 **Codex** 和 **Claude Code** 用的电商多语言文案技能
 使用 $mai
 ```
 
-> 注意：请先安装 `mai`，再安装其它 `mai-*` 子入口。`mai-title`、`mai-copy` 和 `mai-rich` 会读取 `mai` 里的共享工作流规则。
+只安装 `$mai` 也能完成标题、Listing、五点、A+、图片文案、多语言输出、确认后保存等核心任务。先用它体验最简单。
+
+如果你后续想要更明确的快捷入口，再按需安装：
+
+```text
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
+```
+
+> 注意：安装子入口前请先安装 `mai`。`mai-title`、`mai-copy` 和 `mai-rich` 会读取 `mai` 里的共享工作流规则。
 
 ### 方式二：下载项目后一键安装
 
