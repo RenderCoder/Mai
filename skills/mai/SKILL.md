@@ -73,3 +73,15 @@ bun run <skill-dir>/scripts/save-result.ts --product <产品资料文件夹或�
 ```
 
 保存后告知完整路径。
+
+## 安装更新
+
+当用户询问 Codex 里的 Mai 如何更新、覆盖旧版或检查版本时：
+
+1. 检查版本：`bun ~/.codex/skills/mai/scripts/check-version.ts`
+2. 覆盖更新已安装的 Mai 入口：`bun ~/.codex/skills/mai/scripts/update-installed.ts`
+3. 一次安装或更新全部 Mai 入口：`bun ~/.codex/skills/mai/scripts/update-installed.ts --all`
+
+更新脚本默认从 `https://github.com/RenderCoder/Mai` 拉取 `main`，目标是 `$CODEX_HOME/skills` 或 `~/.codex/skills`。它会先把自己复制到临时目录再执行，避免覆盖正在运行的安装脚本；旧技能目录会备份到 `.mai-update-backups/`。
+
+更新后提醒用户重启 Codex。

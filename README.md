@@ -42,7 +42,31 @@ bun ~/.codex/skills/mai/scripts/check-version.ts
 
 Expected version: `1.1.0`. The check script should also report `Three-round workflow: yes` and `CLI-friendly preview: yes`.
 
-If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it. To update, clone the repo and run the local installer with `--force`:
+If an older `mai` skill is already installed, `$skill-installer` stops when the destination exists and does not overwrite it.
+
+If `$mai` is already installed, update in place with Mai's bundled updater:
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts
+```
+
+To preview what would be overwritten first:
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts --dry-run
+```
+
+The updater pulls the latest copy from GitHub, updates the Mai entries that are already installed, and backs up old directories under `~/.codex/skills/.mai-update-backups/`. It stages itself in a temporary directory before overwriting installed files, so it can update the `mai` folder it was launched from.
+
+To install or update all Mai entries:
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts --all
+```
+
+Restart Codex after updating, then run the version check again.
+
+You can also clone the repo and run the local installer with `--force`:
 
 ```bash
 git clone https://github.com/RenderCoder/Mai.git
@@ -50,8 +74,6 @@ cd Mai
 bun install
 bun run install:codex -- --force
 ```
-
-Restart Codex after updating.
 
 Install the optional shortcuts later if you want more explicit entries:
 
@@ -75,6 +97,12 @@ bun run install:codex
 ```
 
 Restart Codex after installing.
+
+If Mai is already installed and you want to replace it with this checkout:
+
+```bash
+bun run install:codex -- --force
+```
 
 Claude Code local use:
 

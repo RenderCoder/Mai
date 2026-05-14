@@ -183,6 +183,7 @@ const skillScriptFiles = [
   "scripts/save-result.ts",
   "scripts/collect-product-source.ts",
   "scripts/check-version.ts",
+  "scripts/update-installed.ts",
 ];
 for (const file of skillScriptFiles) {
   const path = join(ROOT, "skills", "mai", file);

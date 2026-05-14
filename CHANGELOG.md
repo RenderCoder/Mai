@@ -9,10 +9,12 @@
 - Guided parameter confirmation with one numbered question at a time
 - Codex skill support with `agents/openai.yaml` metadata for all skills
 - One-command Codex installer: `bun run install:codex`
+- Installed-skill updater: `bun ~/.codex/skills/mai/scripts/update-installed.ts`
 - GitHub `$skill-installer` installation guidance for all Mai entries
 - Skill-local result save helper so Codex installs keep save support
 - Beginner-focused setup guides in English and Chinese
 - Automated tests for Codex install planning and result path generation
+- Automated tests for forced installed-skill update planning, dry-run behavior, copying, and backup overwrite flow
 - Product-folder source support: `--product` can point to a folder and read all supported text subfiles recursively
 - Release check command: `bun run release:check`
 - Detailed Simplified Chinese user manual at `docs/user-manual.zh-CN.md`

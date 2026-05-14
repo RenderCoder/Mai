@@ -42,7 +42,31 @@ bun ~/.codex/skills/mai/scripts/check-version.ts
 
 期望看到版本 `1.1.0`，并且 `Three-round workflow` 和 `CLI-friendly preview` 都是 `yes`。
 
-如果你之前已经安装过旧版，`$skill-installer` 遇到已存在目录会停止，不会自动覆盖。要更新旧版，推荐下载项目后执行：
+如果你之前已经安装过旧版，`$skill-installer` 遇到已存在目录会停止，不会自动覆盖。
+
+已经装过 `$mai` 的用户，可以直接运行 Mai 自带的更新脚本：
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts
+```
+
+更新前想先看看会覆盖哪些入口，可以运行：
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts --dry-run
+```
+
+这个脚本会从 GitHub 拉取最新版，默认只更新你已经安装过的 Mai 入口，并把旧目录备份到 `~/.codex/skills/.mai-update-backups/`。脚本会先复制到临时目录再执行，所以即使它来自正在被覆盖的 `~/.codex/skills/mai`，也可以完成更新。
+
+如果你已经安装了所有子入口，或想一次装齐所有 Mai 入口：
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts --all
+```
+
+更新后重启 Codex，再运行上面的版本检查命令。
+
+也可以下载项目后从仓库目录强制安装：
 
 ```bash
 git clone https://github.com/RenderCoder/Mai.git
@@ -50,8 +74,6 @@ cd Mai
 bun install
 bun run install:codex -- --force
 ```
-
-然后重启 Codex，再运行上面的版本检查命令。
 
 如果你后续想要更明确的快捷入口，再按需安装：
 
@@ -75,6 +97,12 @@ bun run install:codex
 ```
 
 然后重启 Codex。
+
+如果你之前已经安装过，想覆盖为当前项目版本：
+
+```bash
+bun run install:codex -- --force
+```
 
 Claude Code 用户可以在本地运行：
 

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "claude --plugin-dir .",
     "install:codex": "bun run scripts/install-codex-skill.ts",
-    "test": "bun test scripts/install-codex-skill.test.ts skills/mai/scripts/save-result.test.ts skills/mai/scripts/collect-product-source.test.ts skills/mai/scripts/check-version.test.ts",
+    "test": "bun test scripts/install-codex-skill.test.ts skills/mai/scripts/save-result.test.ts skills/mai/scripts/collect-product-source.test.ts skills/mai/scripts/check-version.test.ts skills/mai/scripts/update-installed.test.ts",
     "lint": "bunx biome check .",
     "lint:fix": "bunx biome check --write .",
     "format": "bunx biome format --write .",

@@ -147,7 +147,35 @@ CLI-friendly preview: yes
 
 说明你安装的是包含“三轮反思流程”和“命令行友好预览”的版本。
 
-如果你以前安装过旧版，`$skill-installer` 看到 `~/.codex/skills/mai` 已存在时会停止，不会自动覆盖。更新旧版建议使用本地安装方式：
+如果你以前安装过旧版，`$skill-installer` 看到 `~/.codex/skills/mai` 已存在时会停止，不会自动覆盖。
+
+已经装过 `$mai` 的用户，可以直接运行自带更新脚本：
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts
+```
+
+更新前想先看看会覆盖哪些入口，可以运行：
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts --dry-run
+```
+
+这个脚本会从 GitHub 拉取最新版，默认只更新你已经安装过的 Mai 入口，并把旧目录备份到：
+
+```text
+~/.codex/skills/.mai-update-backups/
+```
+
+如果你想一次安装或更新所有 Mai 入口：
+
+```bash
+bun ~/.codex/skills/mai/scripts/update-installed.ts --all
+```
+
+更新后重启 Codex，再检查版本。
+
+如果你还没有安装 `$mai`，或者想从下载好的项目目录安装，可以用本地安装方式：
 
 ```bash
 git clone https://github.com/RenderCoder/Mai.git
@@ -155,8 +183,6 @@ cd Mai
 bun install
 bun run install:codex -- --force
 ```
-
-然后重启 Codex，再检查版本。
 
 如果你用熟了，想让入口更明确，再按需安装：
 
