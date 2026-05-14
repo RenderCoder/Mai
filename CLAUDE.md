@@ -12,7 +12,7 @@ The active entries are:
 - `mai-title` — titles and title A/B options
 - `mai-copy` — listings, bullets, A+, taglines, image copy
 - `mai-rich` — images, sketches, prototypes, detailed briefs, layout constraints
-- `mai-product` — product info templates
+- `mai-product` — product info folder templates
 - `mai-brief` — copy brief templates
 
 Legacy directories `ecommerce-multilingual-copy`, `new-product`, and `new-requirement` remain for compatibility reference. New work should target `mai` unless the user explicitly asks for legacy behavior.
@@ -45,12 +45,14 @@ Legacy directories `ecommerce-multilingual-copy`, `new-product`, and `new-requir
 
 - `SKILL.md` is prompt content, not code.
 - `skills/mai/references/workflow.md` is the source of truth for the confirmation-first workflow.
+- `--product` is a product source, preferably a product folder. Folder sources must be read recursively; single Markdown files remain supported for compatibility.
 - Copy generation must show results in chat first and wait for user confirmation before writing a document.
 - Saved documents must include original context, scene understanding, decisions, final copy, count statistics, compliance checks, and manual review notes.
 - For image/sketch/prototype copy, check character count, word count, line suggestions, and 2D layout risk.
 - Support length presets: `minimal` / `medium` / `full`, mapped to 极简表达 / 中等 / 完整.
 - If key parameters are missing, ask one numbered question at a time; users may reply with just the number.
 - Codex installs copy only manifest-listed skill directories, so any runtime helper needed by a skill must live inside that skill directory.
+- Product source folders should ignore generated `*_result_*.md` documents when collecting source context.
 
 ## Development
 

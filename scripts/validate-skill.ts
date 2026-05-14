@@ -170,7 +170,10 @@ if (!existsSync(workflowPath)) {
 
 // 4. Check example files
 console.log("\n4. Skill-local scripts");
-const skillScriptFiles = ["scripts/save-result.ts"];
+const skillScriptFiles = [
+  "scripts/save-result.ts",
+  "scripts/collect-product-source.ts",
+];
 for (const file of skillScriptFiles) {
   const path = join(ROOT, "skills", "mai", file);
   if (!existsSync(path)) {

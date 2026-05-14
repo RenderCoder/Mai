@@ -52,6 +52,31 @@ describe("save-result path helpers", () => {
     expect(output).toBe("/products/WT702_bullets_result_20260512.md");
   });
 
+  test("uses product folder when no requirement is present", () => {
+    const output = generateOutputPath({
+      product: "/products/WT702",
+      copyType: "bullets",
+      dateStr: "20260512",
+      pathExists: () => false,
+      pathIsDirectory: () => true,
+    });
+
+    expect(output).toBe("/products/WT702/WT702_bullets_result_20260512.md");
+  });
+
+  test("prefers requirement location over product folder", () => {
+    const output = generateOutputPath({
+      requirement: "/tasks/image2.md",
+      product: "/products/WT702",
+      copyType: "image-copy",
+      dateStr: "20260512",
+      pathExists: () => false,
+      pathIsDirectory: () => true,
+    });
+
+    expect(output).toBe("/tasks/image2_result_20260512.md");
+  });
+
   test("adds a time suffix when the target already exists", () => {
     const output = generateOutputPath({
       requirement: "/tasks/image2.md",

@@ -4,14 +4,16 @@ description: >
   生成电商产品标题、副标题和标题 A/B 方案的短入口。适用于 Amazon/AliExpress 标题优化、
   新品标题、SEO 标题、图片主标题。必须先在对话中展示候选标题、语言确认、字符/词数统计和风险检查，
   用户确认后才写入文档。
-argument-hint: "--product <path> [--length minimal|medium|full] [--languages CN,EN,DE,ES] [--count 3]"
+argument-hint: "--product <folder-or-file> [--length minimal|medium|full] [--languages CN,EN,DE,ES] [--count 3]"
 ---
 
 # Mai Title
 
 这是 `mai` 的标题模式。执行时读取 `../mai/references/workflow.md`，并按其中的确认优先、对话先展示、确认后写文档规则执行。
 
-用户可以只用自然语言说“帮我写标题”。缺少产品资料、平台、语言、长度或方案数量时，按 `workflow.md` 的引导式参数确认一次问一个数字选择题。
+默认使用简体中文和用户沟通：上下文理解、提问、讲解、审查、风险说明、保存提示都用简体中文；只有最终标题文案按用户指定目标语言输出。
+
+用户可以只用自然语言说“帮我写标题”。`--product` 优先使用产品资料文件夹，并递归读取其中所有可用文本资料；也兼容单个 Markdown 文件。缺少产品资料、平台、语言、长度或方案数量时，按 `workflow.md` 的引导式参数确认一次问一个数字选择题。
 
 ## 默认任务
 

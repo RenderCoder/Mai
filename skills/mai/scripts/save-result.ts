@@ -1,13 +1,14 @@
 #!/usr/bin/env bun
 
 /**
- * Save generated copywriting results beside the source requirement/product file.
+ * Save generated copywriting results beside the source requirement/product
+ * file, or inside the product folder when --product points to a directory.
  *
  * This file lives inside the skill directory so both Claude Code plugin installs
  * and Codex skill installs can use the same deterministic save helper.
  */
 
-import { existsSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { homedir } from "node:os";
 import {
   basename,
@@ -28,6 +29,7 @@ export interface OutputPathOptions {
   cwd?: string;
   homeDir?: string;
   pathExists?: (path: string) => boolean;
+  pathIsDirectory?: (path: string) => boolean;
 }
 
 export function formatDate(date = new Date()): string {
@@ -58,6 +60,14 @@ export function resolveUserPath(
   return isAbsolute(expanded) ? resolve(expanded) : resolve(cwd, expanded);
 }
 
+function defaultPathIsDirectory(path: string): boolean {
+  try {
+    return statSync(path).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 function withCollisionSuffix(
   target: string,
   dateStr: string,
@@ -77,6 +87,7 @@ export function generateOutputPath(opts: OutputPathOptions): string {
   const cwd = opts.cwd ?? process.cwd();
   const homeDir = opts.homeDir ?? homedir();
   const now = opts.now ?? new Date();
+  const pathIsDirectory = opts.pathIsDirectory ?? defaultPathIsDirectory;
 
   if (opts.requirement) {
     const requirementPath = resolveUserPath(opts.requirement, cwd, homeDir);
@@ -88,8 +99,11 @@ export function generateOutputPath(opts: OutputPathOptions): string {
 
   if (opts.product) {
     const productPath = resolveUserPath(opts.product, cwd, homeDir);
-    const dir = dirname(productPath);
-    const name = basename(productPath, extname(productPath));
+    const isProductDir = pathIsDirectory(productPath);
+    const dir = isProductDir ? productPath : dirname(productPath);
+    const name = isProductDir
+      ? basename(productPath)
+      : basename(productPath, extname(productPath));
     const target = join(
       dir,
       `${name}_${opts.copyType}_result_${opts.dateStr}.md`,
@@ -135,12 +149,12 @@ export function helpText(): string {
   return `
 Usage:
   bun run bin/save-result.ts --requirement <path> --content <content-file>
-  bun run bin/save-result.ts --product <path> --copy-type <type> --content <content-file>
+  bun run bin/save-result.ts --product <folder-or-file> --copy-type <type> --content <content-file>
   echo "<content>" | bun run bin/save-result.ts --requirement <path>
 
 Options:
   -r, --requirement <path>   Requirement file path (determines save location)
-  -p, --product <path>       Product file path (fallback save location)
+  -p, --product <path>       Product folder or file path (fallback save location)
   -t, --copy-type <type>     Copy type (default: full-listing)
   -c, --content <path>       Path to content file to save
   -d, --date <YYYYMMDD>      Override date (default: today)

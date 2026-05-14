@@ -4,14 +4,16 @@ description: >
   根据图片、草图、原型图、Figma 截图、复杂 brief 或多文件上下文生成电商图文案的短入口。
   适用于主图、副图、详情页、A+ 模块、包装版面。必须深入确认场景理解、版式限制、语言、数量统计，
   先在对话中展示结果，用户确认后才写入文档。
-argument-hint: "--product <path> [--requirement <path>] [--length minimal|medium|full] [--layout <notes>]"
+argument-hint: "--product <folder-or-file> [--requirement <path>] [--length minimal|medium|full] [--layout <notes>]"
 ---
 
 # Mai Rich
 
 这是 `mai` 的复杂上下文模式。执行时读取 `../mai/references/workflow.md`，并额外重视图片/草图/版面理解。
 
-用户可以只用自然语言说“根据这张图写文案”。缺少版位、产品资料、平台、语言、长度、标签数量或版式限制时，按 `workflow.md` 的引导式参数确认一次问一个数字选择题。
+默认使用简体中文和用户沟通：上下文理解、提问、讲解、审查、风险说明、保存提示都用简体中文；只有最终文案按用户指定目标语言输出。
+
+用户可以只用自然语言说“根据这张图写文案”。`--product` 优先使用产品资料文件夹，并递归读取其中所有可用文本资料；也兼容单个 Markdown 文件。缺少版位、产品资料、平台、语言、长度、标签数量或版式限制时，按 `workflow.md` 的引导式参数确认一次问一个数字选择题。
 
 ## 适用场景
 

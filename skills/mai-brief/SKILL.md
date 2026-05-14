@@ -10,6 +10,8 @@ argument-hint: "<brief-name> [target-directory] [--type title|full-listing|bulle
 
 创建文案需求模板。新用户优先使用这个短入口。
 
+默认使用简体中文和用户沟通：提问、讲解、错误提示、保存提示都用简体中文；模板字段保持当前 Markdown 模板格式。
+
 ## 输入
 
 - 需求名：必填，例如 `wt801-image2`。
@@ -22,7 +24,7 @@ argument-hint: "<brief-name> [target-directory] [--type title|full-listing|bulle
 2. 生成 `<需求名>.md`。
 3. 若文件已存在，不覆盖；询问用户是否换名或覆盖。
 4. 写入下方模板。
-5. 告诉用户下一步可用：`使用 $mai --product <产品文件> --requirement <完整文件路径>`。
+5. 告诉用户下一步可用：`使用 $mai --product <产品资料文件夹> --requirement <完整文件路径>`。
 
 若需求名、保存目录或文案类型缺失，一次只问一个问题。文案类型问题使用数字选项：
 

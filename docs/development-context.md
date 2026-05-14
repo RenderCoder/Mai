@@ -15,6 +15,7 @@ Mai 同时提供 **Codex skills** 和 **Claude Code plugin**。它用于生成�
 - 文档带上下文：保存的结果必须包含原始需求、场景理解、关键决策、最终文案、数量统计和复核项。
 - 长度可控：支持 `minimal`（极简表达）、`medium`（中等）、`full`（完整）三档。
 - 引导式参数确认：关键参数缺失时一次只问一个数字选择题，用户回复数字即可。
+- 产品资料源：`--product` 优先指向产品文件夹，递归读取其中所有可用文本资料；单个 Markdown 文件只作为兼容路径。
 
 ## 当前入口
 
@@ -24,7 +25,7 @@ Mai 同时提供 **Codex skills** 和 **Claude Code plugin**。它用于生成�
 | `mai-title` | 标题、副标题、标题 A/B 方案 |
 | `mai-copy` | Listing、五点、A+、标语、单图文案 |
 | `mai-rich` | 图片、草图、原型图、复杂 brief、二维版式约束 |
-| `mai-product` | 产品资料模板 |
+| `mai-product` | 产品资料文件夹模板 |
 | `mai-brief` | 文案需求模板 |
 
 旧的 `ecommerce-multilingual-copy`、`new-product`、`new-requirement` 目录保留作兼容参考，但 `.claude-plugin/plugin.json` 和 Codex installer 只安装 `mai` 系列入口。
@@ -50,14 +51,16 @@ Codex skill：
 - `skills/mai/references/output-format.md`：表格输出格式。
 - `skills/mai/references/copy-types.md`：文案类型定义。
 - `skills/mai/scripts/save-result.ts`：skill-local 保存工具。
+- `skills/mai/scripts/collect-product-source.ts`：递归合并产品资料文件夹中的文本资料。
 - `scripts/install-codex-skill.ts`：Codex 安装脚本。
 - `scripts/validate-skill.ts`：结构校验。
+- `docs/user-manual.zh-CN.md`：面向普通用户的详细中文使用手册。
 
 ## 工作流规则
 
 每次文案生成必须：
 
-1. 读取产品资料、需求文件、图片/草图上下文。
+1. 读取产品资料源、需求文件、图片/草图上下文；若产品资料源是文件夹，递归读取所有可用文本资料，并忽略已生成的 `*_result_*.md`。
 2. 对缺失的关键参数逐项提问，一次只问一个数字选择题。
 3. 确认场景理解。
 4. 确认语言。
@@ -74,7 +77,7 @@ Codex skill：
 
 1. 用户指定输出文件。
 2. `--requirement` 同目录：`<需求名>_result_<YYYYMMDD>.md`。
-3. `--product` 同目录：`<产品名>_<copy-type>_result_<YYYYMMDD>.md`。
+3. `--product` 位置：若是文件夹，保存到文件夹内；若是单文件，保存到文件同目录。
 4. 无法判断时询问用户保存目录。
 
 ## 开发命令
@@ -84,6 +87,7 @@ bun run validate
 bun run test
 bun run lint
 bun run install:codex -- --dry-run
+bun run release:check
 ```
 
 ## 维护注意
@@ -92,3 +96,4 @@ bun run install:codex -- --dry-run
 - `agents/openai.yaml` 必须跟每个新 skill 的用途一致。
 - 不要把 `workflow.md` 的确认后写文档规则改回自动保存。
 - 不要只改旧长入口；新用户路径以 `mai` 系列为准。
+- 发布或重新安装前运行 `bun run release:check`。

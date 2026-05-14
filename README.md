@@ -12,7 +12,7 @@ Use the short entries instead of remembering a long command. Users can also desc
 | `$mai-title` | Titles, subtitles, title A/B options |
 | `$mai-copy` | Listings, bullets, A+, taglines, image copy |
 | `$mai-rich` | Copy from images, sketches, prototypes, or detailed briefs |
-| `$mai-product` | Create a product info template |
+| `$mai-product` | Create a product info folder template |
 | `$mai-brief` | Create a copy brief template |
 
 ## Install
@@ -61,18 +61,20 @@ For local setup and experiments, `$skill-installer` works well. For reusable dis
 
 ## Quick Start
 
-Create a product file:
+Detailed Chinese user manual: [docs/user-manual.zh-CN.md](docs/user-manual.zh-CN.md).
+
+Create a product folder:
 
 ```text
 Use $mai-product to create WT801 in ~/my-products/
 ```
 
-Fill in `~/my-products/WT801.md`.
+Fill in `~/my-products/WT801/product.md`. You can also drop more product docs into the same folder, such as specs, FAQ, SEO keywords, image briefs, competitor notes, or old listings. Mai reads the folder recursively when you pass it to `--product`.
 
 Generate titles:
 
 ```text
-Use $mai-title --product ~/my-products/WT801.md
+Use $mai-title --product ~/my-products/WT801/
 ```
 
 Natural-language version:
@@ -83,16 +85,18 @@ Use $mai-title to write titles for my new product
 
 Mai will ask for missing product info, platform, languages, length, and number of options.
 
+`--product` accepts a product folder or a single Markdown file. Folders are recommended because they let you import all docs for one product into one source directory.
+
 Generate full copy:
 
 ```text
-Use $mai-copy --product ~/my-products/WT801.md
+Use $mai-copy --product ~/my-products/WT801/
 ```
 
 Generate copy from a sketch or image:
 
 ```text
-Use $mai-rich --product ~/my-products/WT801.md
+Use $mai-rich --product ~/my-products/WT801/
 Write main-image copy from this sketch. English headline max 4 words, subline max 6 words.
 ```
 
@@ -129,7 +133,7 @@ The saved document should include the original brief, reasoning context, decisio
 Typical complete prompt:
 
 ```text
-Use $mai-rich --product ~/my-products/WT801.md --length minimal --languages CN,EN,DE,ES
+Use $mai-rich --product ~/my-products/WT801/ --length minimal --languages CN,EN,DE,ES
 Write Amazon secondary-image copy from my uploaded sketch.
 The image shows a smart watering timer connected to two hoses: flower bed on the left, lawn on the right.
 Target audience: home gardening users.
@@ -162,19 +166,19 @@ You can also say it naturally, for example: “make it very concise.”
 Five title options:
 
 ```text
-Use $mai-title --product ~/my-products/WT801.md --count 5 --length medium
+Use $mai-title --product ~/my-products/WT801/ --count 5 --length medium
 ```
 
 Bullets only:
 
 ```text
-Use $mai-copy --product ~/my-products/WT801.md bullets --length medium
+Use $mai-copy --product ~/my-products/WT801/ bullets --length medium
 ```
 
 Amazon A+:
 
 ```text
-Use $mai-copy --product ~/my-products/WT801.md a-plus --length full
+Use $mai-copy --product ~/my-products/WT801/ a-plus --length full
 ```
 
 Create an image-copy brief:
@@ -186,7 +190,7 @@ Use $mai-brief to create wt801-image2 in ~/tasks/ with type image-copy
 Use a brief:
 
 ```text
-Use $mai-rich --product ~/my-products/WT801.md --requirement ~/tasks/wt801-image2.md
+Use $mai-rich --product ~/my-products/WT801/ --requirement ~/tasks/wt801-image2.md
 ```
 
 ## Development
@@ -195,6 +199,16 @@ Use $mai-rich --product ~/my-products/WT801.md --requirement ~/tasks/wt801-image
 bun run validate
 bun run test
 bun run lint
+bun run release:check
 ```
+
+Before publishing or reinstalling for real use, run:
+
+```bash
+bun run release:check
+bun run install:codex -- --force
+```
+
+Restart Codex after reinstalling.
 
 The old `ecommerce-multilingual-copy` skill remains in the repository for compatibility reference. New users should use the `mai` entries.

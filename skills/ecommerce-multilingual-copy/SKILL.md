@@ -2,9 +2,9 @@
 name: ecommerce-multilingual-copy
 description: >
   生成适用于亚马逊/速卖通的多语言电商文案（CN/EN/DE/ES）。采用4步反思翻译管线：
-  初稿生成→极限审查→终审重写+回译→人工核对。支持通过文件路径传入产品知识库和文案需求，
+  初稿生成→极限审查→终审重写+回译→人工核对。支持通过产品资料文件夹或单文件传入产品知识库和文案需求，
   结果自动保存。适合产品 Listing、图片文案、A+ 内容、标语等场景。
-argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages CN,EN,DE,ES]"
+argument-hint: "--product <folder-or-file> [--requirement <path>] [copy-type] [--languages CN,EN,DE,ES]"
 ---
 
 # 电商多语言文案生成器 — 4步反思翻译管线
@@ -16,7 +16,9 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 **核心机制**：让 AI 在不同步骤中扮演不同角色进行自我博弈，并引入本地化行业的"回译"机制（Back-Translation），确保最终产出在保住核心参数的前提下地道且合规。
 
 ### 工作语言约定
-- 所有分析、诊断、推理、审查报告：**简体中文**
+- 与用户沟通的默认语言：**简体中文**
+- 所有上下文理解、需求澄清、提问、讲解、诊断、审查报告、风险说明、保存提示、执行摘要：**简体中文**
+- 若用户用英文或其它语言提问，仍默认用简体中文回复，除非用户明确要求切换沟通语言
 - 最终文案输出：目标语言（默认 CN/EN/DE/ES）
 
 ---
@@ -30,22 +32,22 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 
 无论在哪个环境，都按同一套参数理解：
 
-**参数格式**：`--product <path> [--requirement <path>] [copy-type] [--languages XX,XX,XX] [--platform amazon|aliexpress]`
+**参数格式**：`--product <folder-or-file> [--requirement <path>] [copy-type] [--languages XX,XX,XX] [--platform amazon|aliexpress]`
 
-- **--product <path>**（必须）：产品知识库文件路径。支持绝对路径和 `~` 展开（如 `~/products/WT702.md`）
+- **--product <path>**（必须）：产品知识库来源路径。优先使用产品资料文件夹，递归读取其中所有可用文本资料；也兼容单个 Markdown 文件。支持绝对路径和 `~` 展开（如 `~/products/WT702/`）
 - **--requirement <path>**（可选）：文案需求文件路径。包含文案类型、画面描述、用户草稿等上下文
 - **copy-type**（可选）：文案类型，默认 `full-listing`。支持的类型见 [copy-types.md](references/copy-types.md)。若需求文件中已指定文案类型，以需求文件为准
 - **--languages**（可选）：覆盖默认语言列表，默认 `CN,EN,DE,ES`
 - **--platform**（可选）：覆盖默认平台，默认 `amazon`
 
 **示例调用**：
-- Claude Code：`/ecommerce-multilingual-copy --product ~/products/WT702.md`
-- Claude Code：`/ecommerce-multilingual-copy --product ~/products/WT702.md title`
-- Codex：`使用 $ecommerce-multilingual-copy --product ~/products/WT702.md --requirement ~/tasks/image2-brief.md`
-- Codex：`用 $ecommerce-multilingual-copy 给 ~/products/WT702.md 生成 bullets，语言 CN,EN,FR`
+- Claude Code：`/ecommerce-multilingual-copy --product ~/products/WT702/`
+- Claude Code：`/ecommerce-multilingual-copy --product ~/products/WT702/ title`
+- Codex：`使用 $ecommerce-multilingual-copy --product ~/products/WT702/ --requirement ~/tasks/image2-brief.md`
+- Codex：`用 $ecommerce-multilingual-copy 给 ~/products/WT702/ 生成 bullets，语言 CN,EN,FR`
 
 **无参数调用**：进入交互模式，依次询问：
-1. 产品知识库文件路径（或在对话中直接提供产品规格）
+1. 产品知识库来源路径（推荐产品资料文件夹，也兼容单文件；或在对话中直接提供产品规格）
 2. 文案类型
 3. 是否有需求文件路径
 4. 是否有草稿文案
@@ -60,8 +62,10 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 **执行步骤**：
 
 1. 从输入中获取 `--product` 参数或用户明确给出的产品知识库路径
-   - 使用当前环境可用的文件读取能力读取该文件
-   - 若文件不存在，提示用户："未找到产品知识库文件 `<path>`。请确认文件路径正确。产品知识库模板结构如下：
+   - 若路径是文件夹，递归读取其中 `.md`、`.txt`、`.csv`、`.json`、`.yaml`、`.yml` 等可用文本资料，忽略二进制文件、压缩包、隐藏系统目录、构建产物和已生成的 `*_result_*.md`
+   - 若路径是单个文件，读取该文件作为兼容输入
+   - 合并上下文时保留每个文件的相对路径标题，例如 `## source: specs/waterproof.md`
+   - 若文件或文件夹不存在，提示用户："未找到产品知识库来源 `<path>`。请确认路径正确。产品知识库模板结构如下：
 
      ```
      # [产品名称] - 产品知识库
@@ -80,7 +84,7 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 
      完整模板可在本插件仓库的 `docs/examples/_TEMPLATE.md` 中找到。"
 
-2. 从产品文件提取以下关键信息：
+2. 从产品资料源提取以下关键信息：
    - 核心技术规格
    - 关键卖点及优先级排序
    - 目标受众画像
@@ -130,9 +134,11 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 3. 若同名结果文件已存在，追加时间后缀：`_result_<YYYYMMDD>_<HHmm>.md`
 
 **情况 2：仅提供了 `--product` 参数（无 `--requirement`）**
-1. 从产品文件路径提取目录和文件名
-2. 生成结果文件路径：`<产品文件所在目录>/<产品文件名>_<copy-type>_result_<YYYYMMDD>.md`
-   - 例：产品文件为 `~/products/WT702.md`，文案类型为 `title` → 结果保存为 `~/products/WT702_title_result_20260412.md`
+1. 从产品资料源提取保存位置和名称
+2. 生成结果文件路径：
+   - 若是产品文件夹：`<产品文件夹>/<产品文件夹名>_<copy-type>_result_<YYYYMMDD>.md`
+   - 若是单个文件：`<产品文件所在目录>/<产品文件名>_<copy-type>_result_<YYYYMMDD>.md`
+   - 例：产品资料源为 `~/products/WT702/`，文案类型为 `title` → 结果保存为 `~/products/WT702/WT702_title_result_20260412.md`
 
 **情况 3：用户指定了输出目录或输出文件**
 - 若用户说“保存到某目录”，生成：`<用户指定目录>/<产品名或需求名>_<copy-type>_result_<YYYYMMDD>.md`
@@ -146,7 +152,8 @@ argument-hint: "--product <path> [--requirement <path>] [copy-type] [--languages
 **结果文件内容格式**：
 ```markdown
 ---
-product: [产品文件路径]
+product: [产品资料源路径]
+product_files: [已读取的产品资料文件清单]
 requirement: [需求文件路径（如有）]
 copy-type: [文案类型]
 languages: [语言列表]

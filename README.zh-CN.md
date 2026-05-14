@@ -12,7 +12,7 @@ Mai 是一个给 **Codex** 和 **Claude Code** 用的电商多语言文案技能
 | `$mai-title` | 生成标题、副标题、标题 A/B 方案 |
 | `$mai-copy` | 生成 Listing、五点、A+、标语、图片文案 |
 | `$mai-rich` | 根据图片、草图、原型图、复杂需求生成文案 |
-| `$mai-product` | 创建产品资料模板 |
+| `$mai-product` | 创建产品资料文件夹模板 |
 | `$mai-brief` | 创建文案需求模板 |
 
 ## 安装
@@ -63,18 +63,20 @@ bun run dev
 
 ## 最简单的用法
 
+完整中文手册见：[docs/user-manual.zh-CN.md](docs/user-manual.zh-CN.md)。
+
 ### 1. 创建产品资料
 
 ```text
 使用 $mai-product 创建 WT801 到 ~/my-products/
 ```
 
-打开 `~/my-products/WT801.md`，把品牌、型号、规格、卖点、关键词填进去。
+打开 `~/my-products/WT801/product.md`，把品牌、型号、规格、卖点、关键词填进去。你也可以继续把规格、FAQ、SEO 关键词、图片 brief、竞品资料、旧 Listing 等文档放进 `~/my-products/WT801/`，Mai 会在 `--product` 指向这个文件夹时递归读取。
 
 ### 2. 生成标题
 
 ```text
-使用 $mai-title --product ~/my-products/WT801.md
+使用 $mai-title --product ~/my-products/WT801/
 ```
 
 也可以不写参数：
@@ -85,16 +87,18 @@ bun run dev
 
 Mai 会按顺序询问产品资料、平台、语言、长度、方案数量等缺失信息。
 
+`--product` 可以传产品资料文件夹，也可以传单个 Markdown 文件。推荐使用文件夹，这样一个产品的所有资料都能放在同一个来源目录里。
+
 ### 3. 生成完整文案
 
 ```text
-使用 $mai-copy --product ~/my-products/WT801.md
+使用 $mai-copy --product ~/my-products/WT801/
 ```
 
 ### 4. 根据图片或草图生成文案
 
 ```text
-使用 $mai-rich --product ~/my-products/WT801.md
+使用 $mai-rich --product ~/my-products/WT801/
 根据这张草图生成主图文案，英文主标题不超过 4 个词，副标题不超过 6 个词
 ```
 
@@ -141,7 +145,7 @@ Mai 不会一上来就写文件。
 典型完整用法：
 
 ```text
-使用 $mai-rich --product ~/my-products/WT801.md --length minimal --languages CN,EN,DE,ES
+使用 $mai-rich --product ~/my-products/WT801/ --length minimal --languages CN,EN,DE,ES
 根据我上传的草图生成亚马逊副图文案。
 画面是一个智能浇水定时器连接两条水管，左边浇花坛，右边浇草坪。
 目标用户是家庭园艺用户。
@@ -172,25 +176,25 @@ Mai 会先回复理解确认、文案表、字符/词数/行数统计和排版�
 也可以直接用中文说：
 
 ```text
-使用 $mai-title --product ~/my-products/WT801.md，长度用极简表达
+使用 $mai-title --product ~/my-products/WT801/，长度用极简表达
 ```
 
 生成 5 组标题方案：
 
 ```text
-使用 $mai-title --product ~/my-products/WT801.md --count 5 --length medium
+使用 $mai-title --product ~/my-products/WT801/ --count 5 --length medium
 ```
 
 只生成五点描述：
 
 ```text
-使用 $mai-copy --product ~/my-products/WT801.md bullets --length medium
+使用 $mai-copy --product ~/my-products/WT801/ bullets --length medium
 ```
 
 生成 Amazon A+ 文案：
 
 ```text
-使用 $mai-copy --product ~/my-products/WT801.md a-plus --length full
+使用 $mai-copy --product ~/my-products/WT801/ a-plus --length full
 ```
 
 创建图片文案需求文件：
@@ -202,13 +206,13 @@ Mai 会先回复理解确认、文案表、字符/词数/行数统计和排版�
 根据需求文件生成：
 
 ```text
-使用 $mai-rich --product ~/my-products/WT801.md --requirement ~/tasks/wt801-image2.md
+使用 $mai-rich --product ~/my-products/WT801/ --requirement ~/tasks/wt801-image2.md
 ```
 
 指定语言：
 
 ```text
-使用 $mai-copy --product ~/my-products/WT801.md --languages CN,EN,DE,ES
+使用 $mai-copy --product ~/my-products/WT801/ --languages CN,EN,DE,ES
 ```
 
 ## 适合普通文员/设计师的建议
@@ -231,7 +235,17 @@ Mai 应该先确认理解，再给你结果和统计。你确认之后，它再�
 bun run validate
 bun run test
 bun run lint
+bun run release:check
 ```
+
+准发布或重新安装前运行：
+
+```bash
+bun run release:check
+bun run install:codex -- --force
+```
+
+重新安装后重启 Codex。
 
 ## 旧入口说明
 
