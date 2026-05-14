@@ -22,12 +22,12 @@ Mai 是一个给 **Codex** 和 **Claude Code** 用的电商多语言文案技能
 如果你已经把这个项目发布到 GitHub，可以在 Codex 里直接输入：
 
 ```text
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-title
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-copy
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-rich
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-product
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-brief
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
 
 装好后重启 Codex，然后输入：

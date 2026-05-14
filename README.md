@@ -22,12 +22,12 @@ Use the short entries instead of remembering a long command. Users can also desc
 After publishing this repository to GitHub, install the active Mai entries from Codex:
 
 ```text
-Use $skill-installer to install https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai
-Use $skill-installer to install https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-title
-Use $skill-installer to install https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-copy
-Use $skill-installer to install https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-rich
-Use $skill-installer to install https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-product
-Use $skill-installer to install https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-brief
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
+Use $skill-installer to install https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
 
 Restart Codex after installing, then use:

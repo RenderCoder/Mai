@@ -117,12 +117,12 @@ Mai 才会写入 Markdown 结果文档。
 如果项目已经发布到 GitHub，可以在 Codex 中逐条输入：
 
 ```text
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-title
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-copy
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-rich
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-product
-使用 $skill-installer 安装 https://github.com/RenderCoder/ecommerce-multilingual-copy/tree/main/skills/mai-brief
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-title
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-copy
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-rich
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-product
+使用 $skill-installer 安装 https://github.com/RenderCoder/Mai/tree/main/skills/mai-brief
 ```
 
 安装后重启 Codex。
