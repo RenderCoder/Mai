@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [1.1.4] - 2026-05-15
 
 ### Added
 - Product-directory onboarding now tells new users to open Codex from a product root folder and explicitly pass the target product subdirectory with `$mai --product ...`
