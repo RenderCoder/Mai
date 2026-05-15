@@ -42,7 +42,7 @@ Mai should prefer this shell command:
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-Expected version: `1.1.4`. The check should report:
+Expected version: `1.1.5`. The check should report:
 
 ```text
 Double-reflection workflow: yes
@@ -58,6 +58,16 @@ sh ~/.codex/skills/mai/scripts/update-installed.sh
 ```
 
 The updater uses macOS-default shell tools: `sh`, `curl`, `tar`, `cp`, and `mv`. Regular users do not need Bun, Python, npm, or any developer environment.
+
+## Uninstall
+
+Exit Codex first, then run this in your system terminal:
+
+```bash
+sh -c 'rm -rf "${CODEX_HOME:-$HOME/.codex}/skills/mai"'
+```
+
+This removes only the user-level `$mai` skill directory. Restart Codex after uninstalling.
 
 ## Quick Start
 

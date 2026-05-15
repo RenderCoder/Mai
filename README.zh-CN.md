@@ -42,7 +42,7 @@ Mai 会优先运行这个 shell 命令：
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-期望版本：`1.1.4`。检查结果应显示：
+期望版本：`1.1.5`。检查结果应显示：
 
 ```text
 Double-reflection workflow: yes
@@ -58,6 +58,16 @@ sh ~/.codex/skills/mai/scripts/update-installed.sh
 ```
 
 这个更新脚本只依赖 macOS 默认可用的 shell、curl、tar、cp 和 mv，不要求普通用户安装 Bun、Python 或其它开发环境。更新后重启 Codex。
+
+## 卸载
+
+先退出 Codex，再在系统终端运行：
+
+```bash
+sh -c 'rm -rf "${CODEX_HOME:-$HOME/.codex}/skills/mai"'
+```
+
+这个命令只删除用户级安装的 `$mai` 技能目录。删除后重启 Codex，`$mai` 就不会再被加载。
 
 ## 最短上手
 

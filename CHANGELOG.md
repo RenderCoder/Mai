@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.1.5] - 2026-05-15
+
+### Added
+- User documentation now includes a shell uninstall command for removing the user-level `$mai` skill directory.
+
 ## [1.1.4] - 2026-05-15
 
 ### Added
