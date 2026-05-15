@@ -3,6 +3,9 @@
 ## Unreleased
 
 ### Added
+- Product-directory onboarding now tells new users to open Codex from a product root folder and explicitly pass the target product subdirectory with `$mai --product ...`
+- Foreign-language final copy now requires a Simplified Chinese back-translation check for every non-Chinese target language
+- Saved Markdown result documents now require tables for final copy, back-translation checks, and count statistics
 - Single user-facing `$mai` install and usage path; title, listing, rich image copy, templates, version checks, and update guidance are now covered by the main skill
 - Version checks now compare the installed skill with the latest GitHub `VERSION` and tell users to exit Codex before running the shell updater when an update is available
 - Skill version files and a `check-version.ts` helper for installed-version checks
@@ -23,6 +26,7 @@
 - Detailed Simplified Chinese user manual at `docs/user-manual.zh-CN.md`
 
 ### Changed
+- Workflow validation now checks product-directory ambiguity handling, back-translation, and saved-table hard rules
 - Plugin manifest now installs only the main `mai` skill for normal Codex setup
 - User docs now prioritize shell-only version/update commands and avoid requiring Bun, Python, npm, or a developer environment
 - Copy generation now uses a five-step double-reflection flow: draft, first reflection, revised version, second reflection, final version

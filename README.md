@@ -42,7 +42,7 @@ Mai should prefer this shell command:
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-Expected version: `1.1.3`. The check should report:
+Expected version: `1.1.4`. The check should report:
 
 ```text
 Double-reflection workflow: yes
@@ -62,6 +62,16 @@ The updater uses macOS-default shell tools: `sh`, `curl`, `tar`, `cp`, and `mv`.
 ## Quick Start
 
 Detailed Chinese user manual: [docs/user-manual.zh-CN.md](docs/user-manual.zh-CN.md).
+
+Prepare a product root folder. Put each product in its own subfolder:
+
+```text
+~/my-products/
+├── WT801/
+└── WT802/
+```
+
+For beginners, open Codex in the product root folder, such as `~/my-products/`. Do not rely on the current directory alone; always specify the exact product folder with `--product`.
 
 Create a product folder:
 
@@ -100,13 +110,14 @@ Mai must show the result in chat first. It should include:
 - Step 3: revised version.
 - Step 4: second reflection and final adjustment suggestions.
 - Step 5: final version.
+- Back-translation check for non-Chinese languages.
 - Counts.
 - Compliance and risk checks.
 - Items to confirm.
 
 If important information is missing, Mai asks one numbered question at a time and the user can reply with a number.
 
-Chat previews should avoid Markdown tables because raw table syntax is hard to read in terminals. After the user confirms, Mai can write a Markdown document with tables for copying and comparison.
+Chat previews should avoid Markdown tables because raw table syntax is hard to read in terminals. After the user confirms, the saved Markdown document must use tables for the final copy, back-translation check, and count statistics.
 
 ## Chinese First
 
@@ -117,6 +128,8 @@ For example, `languages EN,DE` actually outputs:
 ```text
 Simplified Chinese -> English -> German
 ```
+
+After the foreign-language final copy, Mai also back-translates each non-Chinese version into Simplified Chinese so the team can confirm the meaning.
 
 ## Length Presets
 

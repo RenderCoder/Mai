@@ -42,7 +42,7 @@ Mai 会优先运行这个 shell 命令：
 sh ~/.codex/skills/mai/scripts/check-version.sh
 ```
 
-期望版本：`1.1.3`。检查结果应显示：
+期望版本：`1.1.4`。检查结果应显示：
 
 ```text
 Double-reflection workflow: yes
@@ -61,7 +61,19 @@ sh ~/.codex/skills/mai/scripts/update-installed.sh
 
 ## 最短上手
 
-### 1. 创建产品资料
+### 1. 准备产品资料目录
+
+建议把所有产品放进一个产品资料根目录，例如 `~/my-products/`，每个产品一个子目录：
+
+```text
+~/my-products/
+├── WT801/
+└── WT802/
+```
+
+新手推荐在 `~/my-products/` 这个根目录打开 Codex。生成文案时，不要只依赖当前目录；每次都明确写出具体产品目录，例如 `--product ~/my-products/WT801/`。
+
+### 2. 创建产品资料
 
 ```text
 使用 $mai 创建 WT801 产品资料到 ~/my-products/
@@ -69,19 +81,19 @@ sh ~/.codex/skills/mai/scripts/update-installed.sh
 
 打开 `~/my-products/WT801/product.md`，把品牌、型号、规格、卖点、关键词填进去。也可以继续把规格、FAQ、SEO 关键词、图片 brief、竞品资料、旧 Listing 等文档放进同一个产品文件夹。
 
-### 2. 生成标题
+### 3. 生成标题
 
 ```text
 使用 $mai --product ~/my-products/WT801/ 生成 5 组 Amazon 标题，长度用中等。
 ```
 
-### 3. 生成完整 Listing
+### 4. 生成完整 Listing
 
 ```text
 使用 $mai --product ~/my-products/WT801/ 生成完整 Listing，语言要中文、英文、德语、西语。
 ```
 
-### 4. 根据图片或草图写文案
+### 5. 根据图片或草图写文案
 
 ```text
 使用 $mai --product ~/my-products/WT801/ 根据这张草图写 Amazon 副图文案。
@@ -114,11 +126,12 @@ Mai 不会一上来就写文件。
 - 第三步：修正版。
 - 第四步：第二次反思与最终调整建议。
 - 第五步：最终版本。
+- 外语回译核对。
 - 数量统计。
 - 合规与风险检查。
 - 待确认事项。
 
-为了方便命令行阅读，对话预览里尽量不用 Markdown 表格。你确认“可以 / 保存 / 写入”之后，Mai 才会把结果写入 Markdown 文档；写入文档时可以使用表格，方便复制和对照。
+为了方便命令行阅读，对话预览里尽量不用 Markdown 表格。你确认“可以 / 保存 / 写入”之后，Mai 才会把结果写入 Markdown 文档；写入文档时最终文案、外语回译核对和数量统计必须使用 Markdown 表格，方便复制、对照和多语言校对。
 
 ## 中文优先
 
@@ -135,6 +148,8 @@ Mai 面向中文团队。无论你是否要求中文，文案结果都必须先�
 ```text
 简体中文 -> 英语 -> 德语
 ```
+
+外语终稿后还会增加回译核对。例如德语终稿会再翻译回简体中文，让中文团队确认它是否表达了原本意思。
 
 ## 长度选择
 

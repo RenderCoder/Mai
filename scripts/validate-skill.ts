@@ -201,6 +201,53 @@ if (!existsSync(workflowPath)) {
   } else {
     pass("workflow marker: 版本检查与更新引导");
   }
+  if (!workflow.includes("外语回译核对硬约束")) {
+    fail("skills/mai/references/workflow.md: missing 外语回译核对硬约束");
+  } else {
+    pass("workflow marker: 外语回译核对硬约束");
+  }
+  if (!workflow.includes("产品目录层级不清楚")) {
+    fail(
+      "skills/mai/references/workflow.md: missing product directory ambiguity gate",
+    );
+  } else {
+    pass("workflow marker: product directory ambiguity gate");
+  }
+  if (!workflow.includes("写入文件时禁止把最终文案只写成项目符号列表")) {
+    fail("skills/mai/references/workflow.md: missing saved table hard rule");
+  } else {
+    pass("workflow marker: saved table hard rule");
+  }
+}
+
+const outputFormatPath = join(
+  ROOT,
+  "skills",
+  "mai",
+  "references",
+  "output-format.md",
+);
+if (existsSync(outputFormatPath)) {
+  const outputFormat = await Bun.file(outputFormatPath).text();
+  if (!outputFormat.includes("最终文案必须用 Markdown 表格")) {
+    fail(
+      "skills/mai/references/output-format.md: missing final-copy table rule",
+    );
+  } else {
+    pass("output-format marker: final-copy table rule");
+  }
+  if (!outputFormat.includes("外语回译核对必须用 Markdown 表格")) {
+    fail(
+      "skills/mai/references/output-format.md: missing back-translation table rule",
+    );
+  } else {
+    pass("output-format marker: back-translation table rule");
+  }
+  if (!outputFormat.includes("数量统计必须用 Markdown 表格")) {
+    fail("skills/mai/references/output-format.md: missing count table rule");
+  } else {
+    pass("output-format marker: count table rule");
+  }
 }
 
 // 4. Check example files
@@ -275,6 +322,28 @@ for (const file of userFacingFiles) {
     fail(`${file}: contains user-facing legacy Mai subskill entry`);
   } else {
     pass(`${file}: uses only $mai as the user-facing entry`);
+  }
+}
+
+const manualPath = join(ROOT, "docs", "user-manual.zh-CN.md");
+if (existsSync(manualPath)) {
+  const manual = await Bun.file(manualPath).text();
+  if (!manual.includes("在产品资料根目录打开 Codex")) {
+    fail("docs/user-manual.zh-CN.md: missing product-root startup guidance");
+  } else {
+    pass("user manual marker: product-root startup guidance");
+  }
+  if (!manual.includes("每次都明确写出产品目录")) {
+    fail(
+      "docs/user-manual.zh-CN.md: missing explicit product directory guidance",
+    );
+  } else {
+    pass("user manual marker: explicit product directory guidance");
+  }
+  if (!manual.includes("外语回译核对")) {
+    fail("docs/user-manual.zh-CN.md: missing back-translation guidance");
+  } else {
+    pass("user manual marker: back-translation guidance");
   }
 }
 

@@ -15,33 +15,33 @@ async function tempDir(): Promise<string> {
 
 describe("check installed version", () => {
   test("compares semantic versions without treating local-ahead as stale", () => {
-    expect(compareVersions("1.1.3", "1.1.2")).toBe(1);
-    expect(compareVersions("1.1.3", "1.1.3")).toBe(0);
-    expect(compareVersions("1.1.2", "1.1.3")).toBe(-1);
+    expect(compareVersions("1.1.4", "1.1.3")).toBe(1);
+    expect(compareVersions("1.1.4", "1.1.4")).toBe(0);
+    expect(compareVersions("1.1.3", "1.1.4")).toBe(-1);
     expect(compareVersions("1.2", "1.1.9")).toBe(1);
   });
 
   test("reports version and workflow markers", async () => {
     const root = await tempDir();
     await mkdir(join(root, "references"), { recursive: true });
-    await writeFile(join(root, "VERSION"), "1.1.3\n");
+    await writeFile(join(root, "VERSION"), "1.1.4\n");
     await writeFile(
       join(root, "references", "workflow.md"),
       "双反思产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n长单词排版硬约束\n",
     );
-    await writeFile(join(root, "LATEST_VERSION"), "1.1.3\n");
+    await writeFile(join(root, "LATEST_VERSION"), "1.1.4\n");
 
-    const check = await checkInstalledVersion(root, { latestVersion: "1.1.3" });
+    const check = await checkInstalledVersion(root, { latestVersion: "1.1.4" });
 
-    expect(check.version).toBe("1.1.3");
-    expect(check.latestVersion).toBe("1.1.3");
+    expect(check.version).toBe("1.1.4");
+    expect(check.latestVersion).toBe("1.1.4");
     expect(check.updateAvailable).toBe(false);
     expect(check.hasDoubleReflectionWorkflow).toBe(true);
     expect(check.hasCliPreviewRule).toBe(true);
     expect(check.hasChineseFirstCopyRule).toBe(true);
     expect(check.hasShortWordLayoutRule).toBe(true);
-    expect(renderVersionCheck(check)).toContain("Mai installed version: 1.1.3");
-    expect(renderVersionCheck(check)).toContain("Latest GitHub version: 1.1.3");
+    expect(renderVersionCheck(check)).toContain("Mai installed version: 1.1.4");
+    expect(renderVersionCheck(check)).toContain("Latest GitHub version: 1.1.4");
     expect(renderVersionCheck(check)).toContain("Update available: no");
     expect(renderVersionCheck(check)).toContain(
       "Double-reflection workflow: yes",
@@ -55,7 +55,7 @@ describe("check installed version", () => {
     const scriptDir = join(root, "scripts");
     await mkdir(join(root, "references"), { recursive: true });
     await mkdir(scriptDir, { recursive: true });
-    await writeFile(join(root, "VERSION"), "1.1.3\n");
+    await writeFile(join(root, "VERSION"), "1.1.4\n");
     await writeFile(
       join(root, "references", "workflow.md"),
       "双反思产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n长单词排版硬约束\n",
@@ -69,7 +69,7 @@ describe("check installed version", () => {
     const proc = Bun.spawn(["/bin/sh", join(scriptDir, "check-version.sh")], {
       env: {
         ...process.env,
-        MAI_LATEST_VERSION: "1.1.3",
+        MAI_LATEST_VERSION: "1.1.4",
       },
       stdout: "pipe",
       stderr: "pipe",
@@ -81,9 +81,9 @@ describe("check installed version", () => {
     ]);
 
     expect(code).toBe(0);
-    expect(`${stdout}\n${stderr}`).toContain("Mai installed version: 1.1.3");
+    expect(`${stdout}\n${stderr}`).toContain("Mai installed version: 1.1.4");
     expect(stdout).toContain("Latest GitHub version:");
-    expect(stdout).toContain("Latest GitHub version: 1.1.3");
+    expect(stdout).toContain("Latest GitHub version: 1.1.4");
     expect(stdout).toContain("Update available: no");
     expect(stdout).toContain("Double-reflection workflow: yes");
     expect(stdout).toContain("CLI-friendly preview: yes");
@@ -100,7 +100,7 @@ describe("check installed version", () => {
       "双反思产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n长单词排版硬约束\n",
     );
 
-    const check = await checkInstalledVersion(root, { latestVersion: "1.1.3" });
+    const check = await checkInstalledVersion(root, { latestVersion: "1.1.4" });
     const rendered = renderVersionCheck(check);
 
     expect(check.updateAvailable).toBe(true);
@@ -115,13 +115,13 @@ describe("check installed version", () => {
   test("does not prompt an update when the installed version is newer than GitHub", async () => {
     const root = await tempDir();
     await mkdir(join(root, "references"), { recursive: true });
-    await writeFile(join(root, "VERSION"), "1.1.3\n");
+    await writeFile(join(root, "VERSION"), "1.1.4\n");
     await writeFile(
       join(root, "references", "workflow.md"),
       "双反思产出硬约束\n命令行可读性硬约束\n中文优先硬约束\n长单词排版硬约束\n",
     );
 
-    const check = await checkInstalledVersion(root, { latestVersion: "1.1.2" });
+    const check = await checkInstalledVersion(root, { latestVersion: "1.1.3" });
     const rendered = renderVersionCheck(check);
 
     expect(check.updateAvailable).toBe(false);
